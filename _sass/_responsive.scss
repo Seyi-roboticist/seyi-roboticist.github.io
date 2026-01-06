@@ -264,7 +264,8 @@
   .gallery-image,
   .gallery-gif,
   .gallery-video {
-    height: 200px;
+    height: auto;
+    max-height: 400px;
   }
 }
 

@@ -192,6 +192,13 @@ layout: default
                 </div>
                 {% endif %}
 
+                <!-- Custom Plot Include -->
+                {% if page.custom_plot %}
+                <div class="project-media-group">
+                    {% include {{ page.custom_plot }} %}
+                </div>
+                {% endif %}
+
                 <!-- Circuit Schematics -->
                 {% if page.schematics %}
                 <section class="project-media-group" id="schematics">
@@ -200,8 +207,8 @@ layout: default
                         {% for schematic in page.schematics %}
                         <div class="schematic-container">
                             <img src="{{ schematic.file | relative_url }}"
-                                alt="{{ schematic.description | default: 'Circuit Schematic' }}" class="schematic-image"
-                                data-zoomable>
+                                alt="{{ schematic.description | default: 'Circuit Schematic' }}"
+                                class="schematic-image">
                         </div>
                         {% endfor %}
                     </div>

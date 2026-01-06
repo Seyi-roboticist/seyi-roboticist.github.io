@@ -24,7 +24,8 @@ permalink: /projects/
         
         <!-- Projects Grid -->
         <div class="projects-grid" id="projects-grid">
-            {% for project in site.projects %}
+            {% assign sorted_projects = site.projects | sort: "date" | reverse %}
+            {% for project in sorted_projects %}
             <article class="project-card" 
                      data-categories="{% for cat in project.categories %}{{ cat | slugify }} {% endfor %}">
                 

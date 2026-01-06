@@ -32,7 +32,8 @@ layout: default
     </div>
     
     <div class="projects-grid-featured">
-      {% for project in site.projects limit:9 %}
+      {% assign sorted_projects = site.projects | sort: "date" | reverse %}
+      {% for project in sorted_projects limit: 9 %}
         <div class="project-card-featured">
           <div class="project-media">
             {% if project.featured_image %}

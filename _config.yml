@@ -17,6 +17,10 @@ plugins:
   - jekyll-sitemap
   - jekyll-seo-tag
 
+# Include CSV files in build
+include:
+  - assets/data/plots
+
 # Collections
 collections:
   projects:
