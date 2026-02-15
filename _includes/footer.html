@@ -2,30 +2,25 @@
     <div class="container">
         <div class="footer-simple">
             <div class="footer-brand">
-                <h3 class="mesgro-title">Seyi Afolayan</h3>
+                <h3 class="mesgro-title">Seyi R. Afolayan</h3>
                 <div class="mesgro-definition">
                     Full-Stack Roboticist
                 </div>
             </div>
 
             <div class="social-links-center">
-                {% if site.github_username %}
-                <a href="https://github.com/{{ site.github_username }}" target="_blank" aria-label="GitHub">
+                {% if site.author.github %}
+                <a href="https://github.com/{{ site.author.github }}" target="_blank" aria-label="GitHub">
                     <i class="fab fa-github"></i>
                 </a>
                 {% endif %}
-                {% if site.linkedin_username %}
-                <a href="https://linkedin.com/in/{{ site.linkedin_username }}" target="_blank" aria-label="LinkedIn">
+                {% if site.author.linkedin %}
+                <a href="https://linkedin.com/in/{{ site.author.linkedin }}" target="_blank" aria-label="LinkedIn">
                     <i class="fab fa-linkedin"></i>
                 </a>
                 {% endif %}
-                {% if site.twitter_username %}
-                <a href="https://twitter.com/{{ site.twitter_username }}" target="_blank" aria-label="Twitter">
-                    <i class="fab fa-twitter"></i>
-                </a>
-                {% endif %}
-                {% if site.email %}
-                <a href="mailto:{{ site.email }}" aria-label="Email">
+                {% if site.author.email %}
+                <a href="mailto:{{ site.author.email }}" aria-label="Email">
                     <i class="fas fa-envelope"></i>
                 </a>
                 {% endif %}
