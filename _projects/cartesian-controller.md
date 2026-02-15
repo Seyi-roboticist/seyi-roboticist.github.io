@@ -131,7 +131,7 @@ code_files:
       }
 ---
 
-## What This Is
+<h2>What This Is</h2>
 
 <div style="display: flex; flex-wrap: wrap; gap: 2rem; align-items: flex-start; margin: 1.5rem 0;">
   <div style="flex: 1.2; min-width: 280px;">
@@ -164,7 +164,7 @@ code_files:
   </div>
 </div>
 
-## System Architecture
+<h2>System Architecture</h2>
 
 <div style="width:100%; overflow-x:auto; margin: 2rem 0;">
 
@@ -234,13 +234,13 @@ robotics_packages/
         └── urdf/ur5e_with_sensors.xacro  # Robot + sensor integration
 ```
 
-## How the Inverse Kinematics Works
+<h2>How the Inverse Kinematics Works</h2>
 
 The core of the controller is a position-only Cartesian IK solver using SVD decomposition of the manipulator Jacobian. I extract the top 3 rows of the 6×n Jacobian matrix, solving only for translational velocity while ignoring orientation. This is a deliberate design choice for tasks where end-effector orientation is unconstrained.
 
 Tikhonov regularization (damped least squares) handles singularities gracefully. Each singular value σᵢ is replaced with σᵢ/(σᵢ² + λ²), where λ is the damping factor. This trades tracking accuracy for joint velocity smoothness when the manipulability index drops near singular configurations. In practice, the arm slows down instead of generating unbounded joint velocities.
 
-## PID Controller Design
+<h2>PID Controller Design</h2>
 
 The Cartesian error computation uses a full PID controller with configurable gains per axis. I added anti-windup clamping on the integral term to prevent excessive buildup during sustained errors or when the arm is physically blocked. The derivative term provides damping to reduce overshoot during fast target transitions.
 
@@ -254,13 +254,13 @@ The gains I tuned for the UR5e after extensive testing:
 | λ | 0.05 | Jacobian damping factor |
 | Velocity scaling | 0.07 | Motion speed limit |
 
-## SE3 Sensor Hardware Interface
+<h2>SE3 Sensor Hardware Interface</h2>
 
 The `se3_sensor_driver` package implements a ros2_control `SensorInterface` plugin that reads SE3 pose data over TCP sockets. The architecture includes a separate TF Lookup Server node, which is a multithreaded ROS 2 node with dedicated callback groups for timer-driven TF lookups and socket accept/write operations.
 
 The socket protocol uses size-prefixed ROS 2 serialized messages: a 4-byte message length header followed by the CDR-serialized `PoseStamped` payload. The hardware interface handles reconnection with configurable retry attempts and delay, and uses non-blocking sockets to prevent the real-time control loop from stalling on network I/O.
 
-## Deployment Modes
+<h2>Deployment Modes</h2>
 
 A single unified launch file (`ur5e.launch.py`) supports three deployment modes:
 
@@ -272,7 +272,7 @@ A single unified launch file (`ur5e.launch.py`) supports three deployment modes:
 
 Dynamic target updates during operation work through TF. You publish a static transform to `target_sensor_frame` and the controller smoothly tracks the new position in real time.
 
-## Performance Results
+<h2>Performance Results</h2>
 
 | Metric | Measured Value |
 |---|---|
@@ -282,7 +282,7 @@ Dynamic target updates during operation work through TF. You publish a static tr
 | Workspace | Full UR5e operational envelope |
 | Singularity behavior | Graceful slowdown via Tikhonov damping |
 
-## Links
+<h2>Links</h2>
 
 **View on GitHub**: [https://github.com/Seyi-roboticist/_controller_](https://github.com/Seyi-roboticist/_controller_)
 
