@@ -135,12 +135,21 @@ class MESGROApp {
         scrollToTopBtn.setAttribute('aria-label', 'Scroll to top');
         document.body.appendChild(scrollToTopBtn);
 
-        // Show/hide button based on scroll position
+        // Show/hide button based on scroll position + header effect
+        const siteHeader = document.getElementById('site-header');
         window.addEventListener('scroll', () => {
             if (window.pageYOffset > 300) {
                 scrollToTopBtn.classList.add('visible');
             } else {
                 scrollToTopBtn.classList.remove('visible');
+            }
+            // Header glassmorphism intensifies on scroll
+            if (siteHeader) {
+                if (window.pageYOffset > 50) {
+                    siteHeader.classList.add('scrolled');
+                } else {
+                    siteHeader.classList.remove('scrolled');
+                }
             }
         });
 
