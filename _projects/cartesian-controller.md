@@ -291,3 +291,66 @@ Dynamic target updates during operation work through TF. You publish a static tr
 **Live Demo**: [https://www.youtube.com/shorts/UKBMwUgmN18](https://www.youtube.com/shorts/UKBMwUgmN18)
 
 **Visualization Demo**: [https://www.youtube.com/watch?v=FevBLPXetxo](https://www.youtube.com/watch?v=FevBLPXetxo)
+
+<style>
+/* Force all content sections open and remove accordion toggles */
+.project-content .section-header .toggle-icon,
+.project-content .section-toggle,
+.project-content .accordion-toggle,
+.project-content h2 .toggle-btn,
+.project-content h2 + .collapse-toggle,
+.project-content .content-section > h2 ~ .toggle,
+.project-content .section-header::after {
+  display: none !important;
+}
+
+.project-content .section-content,
+.project-content .accordion-content,
+.project-content .collapse-content,
+.project-content .content-section .section-body {
+  display: block !important;
+  max-height: none !important;
+  overflow: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Auto-expand all content sections (not code files)
+  var projectContent = document.querySelector('.project-content') || document.querySelector('.project-description') || document.querySelector('article');
+  if (!projectContent) return;
+
+  // Find all collapsed/hidden sections and force them open
+  var allSections = projectContent.querySelectorAll('[class*="collapse"], [class*="accordion"], [class*="section"]');
+  allSections.forEach(function(section) {
+    section.style.display = 'block';
+    section.style.maxHeight = 'none';
+    section.style.overflow = 'visible';
+    section.style.opacity = '1';
+    section.style.height = 'auto';
+    section.classList.add('active', 'open', 'show', 'expanded');
+    section.classList.remove('collapsed', 'closed', 'hide');
+  });
+
+  // Hide all toggle buttons/icons (+/- symbols) in content sections
+  var toggles = projectContent.querySelectorAll('[class*="toggle"], [class*="collapse-btn"], [class*="accordion-btn"]');
+  toggles.forEach(function(toggle) {
+    // Don't hide toggles inside code file sections
+    if (!toggle.closest('[class*="code"]')) {
+      toggle.style.display = 'none';
+    }
+  });
+
+  // Remove click handlers on h2 elements to prevent re-collapsing
+  var headings = projectContent.querySelectorAll('h2');
+  headings.forEach(function(h2) {
+    // Don't affect code file headings
+    if (!h2.closest('[class*="code"]')) {
+      var newH2 = h2.cloneNode(true);
+      h2.parentNode.replaceChild(newH2, h2);
+    }
+  });
+});
+</script>
