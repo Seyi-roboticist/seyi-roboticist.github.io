@@ -24,7 +24,7 @@ title: Home
 
 <div class="intro-section">
   <div class="container">
-    <p>Roboticist and Controls Engineer with hands-on experience in real-time flight control, perception, sensor fusion, and safety-critical autonomy. From aviation systems maintenance to leading UAV projects at Johns Hopkins and industrial automation at The RDI Group, I build systems that perform reliably in the real world.</p>
+    <p>Roboticist and Controls Engineer specializing in real-time flight control, perception, sensor fusion, and safety-critical autonomy. From aviation systems maintenance to leading UAV projects at Johns Hopkins and industrial automation at The RDI Group, I design systems that perform reliably in dynamic environments.</p>
   </div>
 </div>
 
@@ -96,13 +96,14 @@ title: Home
         <div class="skill-tags">
           <span class="skill-tag">LaTeX</span>
           <span class="skill-tag">Simulation-to-Hardware Pipelines</span>
+          <span class="skill-tag">Basic Computer Vision & ML Pipelines</span>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Keep the existing project showcase grid (it's working) -->
+<!-- Keep the project showcase grid (update with your projects in _projects/) -->
 <div class="projects-showcase">
   <div class="container">
     <div class="section-header">
@@ -111,28 +112,38 @@ title: Home
     </div>
 
     <div class="projects-grid-featured">
-      {% assign featured_projects = site.projects | where: "featured", true | sort: "date" | reverse %}
-      {% assign all_projects = site.projects | sort: "date" | reverse %}
-      {% assign combined_projects = featured_projects | concat: all_projects %}
-      {% assign unique_projects = combined_projects | uniq %}
-      {% for project in unique_projects limit: 9 %}
+      {% for project in site.projects limit: 6 %}
         <div class="project-card-featured">
-          <!-- Your existing project card Liquid code remains here -->
-          <!-- Do NOT change this block unless you want to customize cards -->
+          <div class="project-media">
+            {% if project.featured_image %}
+              <img src="{{ project.featured_image | relative_url }}" alt="{{ project.title }}">
+            {% else %}
+              <div class="project-placeholder">
+                <i class="fas fa-robot"></i>
+              </div>
+            {% endif %}
+            <div class="project-overlay">
+              <a href="{{ project.url | relative_url }}" class="project-link">
+                <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3><a href="{{ project.url | relative_url }}">{{ project.title }}</a></h3>
+            <p>{{ project.description | truncate: 100 }}</p>
+          </div>
         </div>
       {% endfor %}
     </div>
 
     <div class="showcase-actions">
-      <a href="{{ '/projects/' | relative_url }}" class="btn-primary-large">
-        <i class="fas fa-th"></i> View All Projects
-      </a>
+      <a href="/projects/" class="btn-primary">View All Projects</a>
     </div>
   </div>
 </div>
 
 <footer class="site-footer">
   <div class="container">
-    <p>© 2026 Oluwaseyi R. Afolayan. Built with Jekyll.</p>
+    <p>© {{ 'now' | date: "%Y" }} Oluwaseyi R. Afolayan. Built with Jekyll.</p>
   </div>
 </footer>
