@@ -59,46 +59,59 @@ class MESGROApp {
      */
     setupThemeToggle() {
         const themeToggle = document.getElementById('theme-toggle');
-        // Allow for the icon to be finding more flexibly
-        const themeIcon = themeToggle ? themeToggle.querySelector('i') : null;
         
         if (!themeToggle) {
             console.warn('Theme toggle button not found');
             return;
         }
 
-        // Check for saved theme preference or default to 'dark'
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        
-        // Function to update icon
-        const updateIcon = (theme) => {
-            if (!themeIcon) return;
-            
-            // Remove both potentially to be safe
-            themeIcon.classList.remove('fa-moon', 'fa-sun');
-            
-            if (theme === 'dark') {
-                themeIcon.classList.add('fa-sun'); // Sun icon for dark mode (switch to light)
-            } else {
-                themeIcon.classList.add('fa-moon'); // Moon icon for light mode (switch to dark)
-            }
+        const iconEl = themeToggle.querySelector('.theme-toggle-icon');
+        const labelEl = themeToggle.querySelector('.theme-toggle-label');
+
+        // Theme definitions: [id, label, icon]
+        const themes = [
+            ['deep-space',     'Space',   '☽'],
+            ['obsidian-gold',  'Gold',    '◆'],
+            ['midnight-rose',  'Rose',    '✿'],
+            ['arctic',         'Arctic',  '☀'],
+            ['ember',          'Ember',   '⬡'],
+        ];
+
+        // Find current theme index
+        const getIndex = (id) => {
+            const idx = themes.findIndex(t => t[0] === id);
+            return idx >= 0 ? idx : 0;
         };
 
-        // Initial icon update
-        updateIcon(savedTheme);
+        // Apply theme
+        const applyTheme = (idx) => {
+            const [id, label, icon] = themes[idx];
+            document.documentElement.setAttribute('data-theme', id);
+            localStorage.setItem('theme', id);
+            if (iconEl) iconEl.textContent = icon;
+            if (labelEl) labelEl.textContent = label;
+        };
 
-        // Toggle theme on button click
+        // Load saved or default
+        const saved = localStorage.getItem('theme') || 'deep-space';
+        // Migrate old values
+        let startIdx;
+        if (saved === 'dark') startIdx = 0;
+        else if (saved === 'light') startIdx = 3;
+        else startIdx = getIndex(saved);
+
+        applyTheme(startIdx);
+
+        // Cycle on click
         themeToggle.addEventListener('click', (e) => {
-            e.preventDefault(); // Prevent any default button behavior
-            
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            
-            updateIcon(newTheme);
+            e.preventDefault();
+            const current = document.documentElement.getAttribute('data-theme');
+            const nextIdx = (getIndex(current) + 1) % themes.length;
+            applyTheme(nextIdx);
+
+            // Brief animation
+            themeToggle.style.transform = 'scale(0.9)';
+            setTimeout(() => { themeToggle.style.transform = ''; }, 150);
         });
     }
 
