@@ -1,46 +1,52 @@
 ---
 layout: default
 title: About
+permalink: /about/
 ---
 
-# About Me
+# About
 
-I entered robotics through an unconventional route. After immigrating to Canada with limited resources, I spent years as an Aviation Systems Technician — maintaining and operating high-stakes aviation systems where reliability is non-negotiable. That hands-on experience built a deep respect for robust design, fault tolerance, and engineering that must perform under real-world pressure.
+Controls and autonomy engineer focused on flight dynamics, state estimation, and real-time systems. I work across the full pipeline — from first-principles dynamic modeling and controller design through hardware deployment and flight testing.
 
-At Johns Hopkins University, I earned the LCSR Distinguished Scholarship and focused on controls, perception, autonomy, and machine learning. I contributed to underwater vehicle control systems under IEEE Fellow Prof. Louis Whitcomb, led the Aurelia autonomous UAV project (full ROS 2 autonomy stack, sim-to-real deployment, highest course score in program history), and served as a graduate teaching assistant for three robotics courses, mentoring over 800 students.
+My technical foundation spans fixed-wing and rotary-wing UAV control, sensor fusion in GPS-denied environments, precision motion control on industrial hardware, and safety-critical automation systems that run 24/7 in production.
 
-Today, I work as a Controls Engineer at The RDI Group, designing safety-critical industrial automation systems with Allen-Bradley PLCs, deterministic real-time sequences, and fault-tolerant architectures for continuous production environments. While this sharpens my production-grade robustness, my core expertise and passion remain in precision motion control, state estimation, computer vision, sensor fusion, deep learning, and autonomous systems — especially for dynamic, safety-critical applications such as UAVs.
+I hold dual pilot certifications (FAA Part 107, Transport Canada Advanced) and have hands-on experience with aircraft systems from years as an Aviation Systems Technician — not just the math, but the hardware.
+
+---
+
+## What I Work On
+
+**Flight Controls & GNC** — 6DOF modeling, transfer function derivation, successive loop closure, nested PID/PIR architecture, stability margin analysis, linearization and trim computation
+
+**State Estimation** — Extended Kalman Filters, GPS smoothing with Gauss-Markov error models, IMU/accelerometer/magnetometer fusion, sensor characterization
+
+**Real-Time Control Systems** — 500Hz control loops, Jacobian-based inverse kinematics, singularity-robust algorithms (SVD + Tikhonov), deterministic timing, lifecycle-managed ROS 2 nodes
+
+**Autonomy & Robotics** — ROS 2 full-stack development, sim-to-real pipelines, waypoint navigation, trajectory tracking, underwater vehicle autonomy
+
+**Industrial Automation** — Allen-Bradley PLC programming, safety-critical interlocks, VFD motor control, continuous production systems
+
+---
 
 ## Education
-- **M.S.E. Robotics** (Control & Perception Track) — Johns Hopkins University  
-  LCSR Distinguished Scholar
-- **B.Sc. Sustainable Design Engineering** (Mechatronics) — University of Prince Edward Island  
-  Summa Cum Laude · First in Class · Engineers PEI Graduating Student Award
+
+**M.S.E. Robotics** — Johns Hopkins University
+LCSR Distinguished Scholar · Whitcomb Lab (IEEE Fellow)
+
+**B.Sc. Sustainable Design Engineering** — University of Prince Edward Island
+First in Class · Engineers PEI Award
+
+---
 
 ## Certifications
-- FAA Part 107 Remote Pilot (United States)
-- Transport Canada Remote Pilot (Advanced, Canada)
 
-## Teaching & Mentorship
-- **Algorithms for Sensor-Based Robotics** (EN.601.463/663) — Mentored 82+ graduate students on motion planning, manipulation, control theory, UR5 hardware validation
-- **Design & Analysis of Dynamic Systems** (EN.530.343) — Led sessions on classical/modern control, servo systems, stability analysis
-- **Robot Sensors and Actuators** (EN.530.430) — Guided labs on sensor calibration, integration, Arduino-based embedded systems
+- **FAA Part 107 Remote Pilot** — United States
+- **Transport Canada Remote Pilot (Advanced)** — Canada
 
-## Technical Skills
-**Controls & Estimation**  
-PID/PIR tuning · sensor fusion · EKF/UKF · successive loop closure · stability analysis · state-space methods
+---
 
-**Perception & Machine Learning**  
-Computer vision (OpenCV) · deep learning fundamentals · machine perception · reinforcement learning concepts · sim-to-real transfer
+## Teaching
 
-**Robotics Frameworks & Tools**  
-ROS 2 · Gazebo · NVIDIA Isaac Sim · MAVROS · ros2_control
-
-**Programming & Languages**  
-C++ · Python · MATLAB/Simulink · Git · Linux · Docker · Bash
-
-**Hardware & Platforms**  
-UR5/UR5e manipulators · Allen-Bradley PLCs · NVIDIA Jetson · Pixhawk flight controllers · VFD systems · embedded real-time systems
-
-**Other**  
-LaTeX · simulation-to-hardware pipelines · basic computer vision & ML pipelines
+- **Algorithms for Sensor-Based Robotics** — 82+ students · UR5 hardware validation
+- **Design & Analysis of Dynamic Systems** — Control theory · Servo systems
+- **Robot Sensors and Actuators** — Sensor calibration · Embedded systems
