@@ -134,35 +134,33 @@ code_files:
 ## What This Is
 
 <div style="display: flex; flex-wrap: wrap; gap: 2rem; align-items: flex-start; margin: 1.5rem 0;">
-  <div style="flex: 1; min-width: 280px;">
+  <div style="flex: 1.2; min-width: 280px;">
     <p>I built a complete real-time Cartesian position controller for Universal Robots arms from scratch. Not a MoveIt wrapper. Not an off-the-shelf planner. The full pipeline: sensor hardware interface, socket-based data bridge, PID error computation, SVD-based Jacobian inversion, and velocity command generation. Every layer is designed for real-time performance with deterministic timing.</p>
     <p>The controller runs at 500Hz and achieves ±0.7mm positional accuracy across the full UR5e workspace. I validated it in Gazebo simulation first, then deployed it on real UR5 and UR5e hardware.</p>
+    <div style="margin-top: 1.5rem;">
+      <img src="/assets/images/projects/cartesian-controller/ur5_realtime_control.gif" alt="UR5 robot tracking Cartesian targets in real time" style="width:100%; border-radius: 8px;">
+      <p style="text-align:center; font-size: 0.85rem; opacity: 0.7; margin-top: 0.4rem;"><em>UR5 tracking dynamic Cartesian position targets at 500Hz.</em></p>
+    </div>
   </div>
-  <div style="flex: 1; min-width: 280px;">
-    <a href="https://www.youtube.com/watch?v=lPNE6-0R59k" target="_blank">
-      <img src="https://img.youtube.com/vi/lPNE6-0R59k/maxresdefault.jpg" alt="Simulation Demo" style="width:100%; border-radius: 8px; margin-bottom: 0.5rem;">
-    </a>
-    <p style="text-align:center; font-size: 0.9rem; opacity: 0.8;">Simulation Demo: UR5e tracking dynamic targets in Gazebo</p>
-  </div>
-</div>
-
-<div align="center" style="margin: 2rem 0;">
-  <img src="/assets/images/projects/cartesian-controller/ur5_realtime_control.gif" alt="UR5 robot tracking Cartesian targets in real time" width="720" style="border-radius: 8px;">
-  <p><em>UR5 tracking dynamic Cartesian position targets using the controller at 500Hz.</em></p>
-</div>
-
-<div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin: 1.5rem 0;">
-  <div style="flex: 1; min-width: 240px; max-width: 360px;">
-    <a href="https://www.youtube.com/shorts/UKBMwUgmN18" target="_blank">
-      <img src="https://img.youtube.com/vi/UKBMwUgmN18/maxresdefault.jpg" alt="Live Hardware Demo" style="width:100%; border-radius: 8px;">
-    </a>
-    <p style="text-align:center; font-size: 0.85rem; opacity: 0.8;">Live Demo: Real UR5 hardware</p>
-  </div>
-  <div style="flex: 1; min-width: 240px; max-width: 360px;">
-    <a href="https://www.youtube.com/watch?v=FevBLPXetxo" target="_blank">
-      <img src="https://img.youtube.com/vi/FevBLPXetxo/maxresdefault.jpg" alt="RViz Visualization" style="width:100%; border-radius: 8px;">
-    </a>
-    <p style="text-align:center; font-size: 0.85rem; opacity: 0.8;">Visualization: TF frames and error convergence in RViz</p>
+  <div style="flex: 0.8; min-width: 240px; display: flex; flex-direction: column; gap: 1rem;">
+    <div>
+      <a href="https://www.youtube.com/watch?v=lPNE6-0R59k" target="_blank">
+        <img src="https://img.youtube.com/vi/lPNE6-0R59k/maxresdefault.jpg" alt="Simulation Demo" style="width:100%; border-radius: 8px;">
+      </a>
+      <p style="text-align:center; font-size: 0.85rem; opacity: 0.7; margin-top: 0.3rem;">Simulation Demo</p>
+    </div>
+    <div>
+      <a href="https://www.youtube.com/shorts/UKBMwUgmN18" target="_blank">
+        <img src="https://img.youtube.com/vi/UKBMwUgmN18/maxresdefault.jpg" alt="Live Hardware Demo" style="width:100%; border-radius: 8px;">
+      </a>
+      <p style="text-align:center; font-size: 0.85rem; opacity: 0.7; margin-top: 0.3rem;">Live Demo (UR5 Hardware)</p>
+    </div>
+    <div>
+      <a href="https://www.youtube.com/watch?v=FevBLPXetxo" target="_blank">
+        <img src="https://img.youtube.com/vi/FevBLPXetxo/maxresdefault.jpg" alt="RViz Visualization" style="width:100%; border-radius: 8px;">
+      </a>
+      <p style="text-align:center; font-size: 0.85rem; opacity: 0.7; margin-top: 0.3rem;">RViz Visualization</p>
+    </div>
   </div>
 </div>
 
