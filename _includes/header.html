@@ -1,12 +1,13 @@
-<header class="site-header">
+<header class="site-header" id="site-header">
+    <div class="header-glow"></div>
     <div class="container">
         <div class="header-content">
             <div class="site-brand">
                 <a href="{{ '/' | relative_url }}" class="brand-link">
-                    <span class="brand-text">{{ site.title | split: ' ' | first }}</span>
+                    <span class="brand-mono">S</span>
+                    <span class="brand-text">Seyi Afolayan</span>
                 </a>
             </div>
-
             <nav class="site-nav" id="site-nav">
                 <ul class="nav-list">
                     {% for nav_item in site.navigation %}
@@ -19,12 +20,13 @@
                     {% endfor %}
                 </ul>
             </nav>
-
             <div class="header-actions">
+                <a href="mailto:{{ site.email }}" class="header-cta">
+                    Get in Touch
+                </a>
                 <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
                     <i class="fas fa-moon"></i>
                 </button>
-
                 <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu">
                     <span class="hamburger-line"></span>
                     <span class="hamburger-line"></span>
