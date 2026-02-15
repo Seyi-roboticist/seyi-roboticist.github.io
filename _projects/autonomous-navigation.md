@@ -122,6 +122,10 @@ This project is a ground-up autonomous mobile robot built on an Arduino Mega wit
 
 The system demonstrates core mobile robotics principles at the hardware level: real-time multi-sensor polling, interrupt-driven encoder counting, kinematic modeling for differential-drive turning, and reactive behavior arbitration — all running on bare-metal embedded C++ with no operating system.
 
+## Demo
+
+![Autonomous Navigation Demo](https://github.com/Seyi-roboticist/OluwaseyiR.github.io/assets/143431845/e2be8889-235b-4072-83e4-30efd551662b)
+
 ## System Architecture
 
 The robot's control flow follows a sense-plan-act loop running on the Arduino's main `loop()`:
