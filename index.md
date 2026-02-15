@@ -24,7 +24,7 @@ title: Home
 
 <div class="intro-section">
   <div class="container">
-    <p>Roboticist and Controls Engineer specializing in real-time flight control, perception, sensor fusion, and safety-critical autonomy. From aviation systems maintenance to leading UAV projects at Johns Hopkins and industrial automation at The RDI Group, I design systems that perform reliably in dynamic environments.</p>
+    <p>Controls and autonomy engineer specializing in flight dynamics, state estimation, and real-time systems. I design, model, and deploy control systems from first-principles math through hardware — fixed-wing and rotary-wing UAVs, precision manipulators, and safety-critical industrial automation.</p>
   </div>
 </div>
 
@@ -48,9 +48,8 @@ title: Home
         <h3>Perception & Machine Learning</h3>
         <div class="skill-tags">
           <span class="skill-tag">Computer Vision (OpenCV)</span>
-          <span class="skill-tag">Deep Learning Fundamentals</span>
+          <span class="skill-tag">Deep Learning</span>
           <span class="skill-tag">Machine Perception</span>
-          <span class="skill-tag">Reinforcement Learning Concepts</span>
           <span class="skill-tag">Sim-to-Real Transfer</span>
         </div>
       </div>
@@ -90,20 +89,10 @@ title: Home
           <span class="skill-tag">Embedded Real-Time Systems</span>
         </div>
       </div>
-
-      <div class="skill-category">
-        <h3>Other</h3>
-        <div class="skill-tags">
-          <span class="skill-tag">LaTeX</span>
-          <span class="skill-tag">Simulation-to-Hardware Pipelines</span>
-          <span class="skill-tag">Basic Computer Vision & ML Pipelines</span>
-        </div>
-      </div>
     </div>
   </div>
 </div>
 
-<!-- Keep the project showcase grid (update with your projects in _projects/) -->
 <div class="projects-showcase">
   <div class="container">
     <div class="section-header">
