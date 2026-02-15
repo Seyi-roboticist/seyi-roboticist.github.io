@@ -1,7 +1,7 @@
 # Site settings
 title: "Seyi Afolayan — Controls & Autonomy Engineer"
 description: "Controls and autonomy engineer with expertise in flight dynamics, state estimation, and real-time control systems."
-baseurl: "" # leave empty for username.github.io
+baseurl: ""  # leave empty for username.github.io
 url: "https://seyi-roboticist.github.io"
 
 # Personal info
@@ -11,20 +11,25 @@ author:
   tagline: "Flight Controls · State Estimation · Real-Time Systems"
   email: "seyirafolayan@gmail.com"
   github: "Seyi-roboticist"
-  linkedin: "seyi-afolayan"
+  linkedin: "oluwaseyi-r-afolayan-4b8330206"  # full LinkedIn slug for better linking
 
 # Build settings
 markdown: kramdown
-theme: null
-plugins: []
+highlighter: rouge
 
-# Collections
+# Plugins (explicit list of safe GitHub Pages-supported ones)
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Collections for projects
 collections:
   projects:
     output: true
     permalink: /projects/:name/
 
-# Defaults
+# Defaults for project pages
 defaults:
   - scope:
       path: ""
