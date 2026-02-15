@@ -12,15 +12,6 @@ gallery:
   - type: "image"
     file: "/assets/images/projects/cartesian-controller/ur5_realtime_control.gif"
     description: "UR5 robot tracking Cartesian targets in real time at 500Hz"
-  - type: "video"
-    file: "https://www.youtube.com/embed/FevBLPXetxo"
-    description: "RViz visualization of real-time trajectory tracking with TF frame overlay"
-  - type: "video"
-    file: "https://www.youtube.com/embed/lPNE6-0R59k"
-    description: "Gazebo simulation showing Cartesian position control with dynamic targets"
-  - type: "video"
-    file: "https://www.youtube.com/embed/UKBMwUgmN18"
-    description: "Live hardware demonstration on a real UR5 robot"
 
 code_files:
   - name: "Sample Code Snippet: Damped Pseudo-Inverse Jacobian IK"
@@ -142,25 +133,38 @@ code_files:
 
 ## What This Is
 
-I built a complete real-time Cartesian position controller for Universal Robots arms from scratch. Not a MoveIt wrapper. Not an off-the-shelf planner. The full pipeline: sensor hardware interface, socket-based data bridge, PID error computation, SVD-based Jacobian inversion, and velocity command generation. Every layer is designed for real-time performance with deterministic timing.
+<div style="display: flex; flex-wrap: wrap; gap: 2rem; align-items: flex-start; margin: 1.5rem 0;">
+  <div style="flex: 1; min-width: 280px;">
+    <p>I built a complete real-time Cartesian position controller for Universal Robots arms from scratch. Not a MoveIt wrapper. Not an off-the-shelf planner. The full pipeline: sensor hardware interface, socket-based data bridge, PID error computation, SVD-based Jacobian inversion, and velocity command generation. Every layer is designed for real-time performance with deterministic timing.</p>
+    <p>The controller runs at 500Hz and achieves ±0.7mm positional accuracy across the full UR5e workspace. I validated it in Gazebo simulation first, then deployed it on real UR5 and UR5e hardware.</p>
+  </div>
+  <div style="flex: 1; min-width: 280px;">
+    <a href="https://www.youtube.com/watch?v=lPNE6-0R59k" target="_blank">
+      <img src="https://img.youtube.com/vi/lPNE6-0R59k/maxresdefault.jpg" alt="Simulation Demo" style="width:100%; border-radius: 8px; margin-bottom: 0.5rem;">
+    </a>
+    <p style="text-align:center; font-size: 0.9rem; opacity: 0.8;">Simulation Demo: UR5e tracking dynamic targets in Gazebo</p>
+  </div>
+</div>
 
-The controller runs at 500Hz and achieves ±0.7mm positional accuracy across the full UR5e workspace. I validated it in Gazebo simulation first, then deployed it on real UR5 and UR5e hardware.
-
-<div align="center">
-  <img src="/assets/images/projects/cartesian-controller/ur5_realtime_control.gif" alt="UR5 robot tracking Cartesian targets in real time" width="720">
+<div align="center" style="margin: 2rem 0;">
+  <img src="/assets/images/projects/cartesian-controller/ur5_realtime_control.gif" alt="UR5 robot tracking Cartesian targets in real time" width="720" style="border-radius: 8px;">
   <p><em>UR5 tracking dynamic Cartesian position targets using the controller at 500Hz.</em></p>
 </div>
 
-## Watch It Move
-
-[![Simulation Demo](https://img.youtube.com/vi/lPNE6-0R59k/maxresdefault.jpg)](https://www.youtube.com/watch?v=lPNE6-0R59k)
-**Simulation Demo**: UR5e tracking dynamic Cartesian targets in Gazebo with RViz visualization overlay.
-
-[![Live Hardware Demo](https://img.youtube.com/vi/UKBMwUgmN18/maxresdefault.jpg)](https://www.youtube.com/shorts/UKBMwUgmN18)
-**Live Demo**: Real UR5 robot executing Cartesian position commands with the controller running on hardware.
-
-[![RViz Visualization](https://img.youtube.com/vi/FevBLPXetxo/maxresdefault.jpg)](https://www.youtube.com/watch?v=FevBLPXetxo)
-**Visualization Demo**: TF frames, target tracking, and error convergence visualized in real time.
+<div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin: 1.5rem 0;">
+  <div style="flex: 1; min-width: 240px; max-width: 360px;">
+    <a href="https://www.youtube.com/shorts/UKBMwUgmN18" target="_blank">
+      <img src="https://img.youtube.com/vi/UKBMwUgmN18/maxresdefault.jpg" alt="Live Hardware Demo" style="width:100%; border-radius: 8px;">
+    </a>
+    <p style="text-align:center; font-size: 0.85rem; opacity: 0.8;">Live Demo: Real UR5 hardware</p>
+  </div>
+  <div style="flex: 1; min-width: 240px; max-width: 360px;">
+    <a href="https://www.youtube.com/watch?v=FevBLPXetxo" target="_blank">
+      <img src="https://img.youtube.com/vi/FevBLPXetxo/maxresdefault.jpg" alt="RViz Visualization" style="width:100%; border-radius: 8px;">
+    </a>
+    <p style="text-align:center; font-size: 0.85rem; opacity: 0.8;">Visualization: TF frames and error convergence in RViz</p>
+  </div>
+</div>
 
 ## System Architecture
 
