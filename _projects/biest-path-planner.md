@@ -1,7 +1,7 @@
 ---
 layout: project
 title: "Bidirectional EST Path Planner for UR5"
-description: "Custom Bidirectional Expansive Space Tree (BiEST) motion planner integrated with MoveIt 2 for collision-free trajectory generation on the UR5 manipulator. Weighted roulette-wheel sampling, goal-biased exploration, and iterative backtracking across dual trees — tested in RViz, Gazebo, Isaac Sim, and on physical hardware."
+description: "Custom Bidirectional Expansive Space Tree (BiEST) motion planner integrated with MoveIt 2 for collision-free trajectory generation on the UR5 manipulator. Combines weighted roulette-wheel sampling, goal-biased exploration, and iterative backtracking across dual trees. Tested in RViz, Gazebo, Isaac Sim, and on physical hardware."
 date: 2024-12-01
 categories: [Motion Planning, C++, ROS2, MoveIt, Manipulation]
 featured_image: "https://github.com/Seyi-roboticist/OluwaseyiR.github.io/assets/143431845/cdd1d19e-3765-42c3-9cce-d4a27d502e23"
@@ -11,7 +11,7 @@ code_files:
     file: "assignment3_context.cpp"
     language: "cpp"
     content: |
-      // Bidirectional EST — alternating tree expansion with bridge detection
+      // Bidirectional EST: alternating tree expansion with bridge detection
       ASBRContext::path ASBRContext::est(
           const vertex& q_init, const vertex& q_goal)
       {
@@ -46,7 +46,7 @@ code_files:
     file: "assignment3_context.cpp"
     language: "cpp"
     content: |
-      // Roulette-wheel selection — favors less-explored regions
+      // Roulette-wheel selection: favors less-explored regions
       ASBRContext::index ASBRContext::select_config_from_tree(
           const std::vector<weight>& w)
       {
@@ -116,9 +116,9 @@ code_files:
 
 ## Overview
 
-I built this as part of *Algorithms for Sensor-Based Robotics* (EN.601.463/663) at Johns Hopkins — a graduate course I later TA'd for two semesters, mentoring 80+ students through these exact types of motion planning problems. Having seen dozens of students struggle with sampling-based planners (EST, RRT, RRT*, PRM), I know firsthand where the intuition breaks down: why weighted sampling matters, how goal bias interacts with cluttered environments, and why a deterministic tree alternation beats a random coin flip by nearly 5x in planning time. This project is my own ground-up implementation of a Bidirectional Expansive Space Tree, written in C++ and plugged directly into MoveIt 2 as a custom planning plugin for the UR5.
+I built this as part of *Algorithms for Sensor-Based Robotics* (EN.601.463/663) at Johns Hopkins. It's a graduate course I later TA'd for two semesters, mentoring 80+ students through these exact types of motion planning problems. Having seen dozens of students struggle with sampling-based planners (EST, RRT, RRT*, PRM), I know firsthand where the intuition breaks down: why weighted sampling matters, how goal bias interacts with cluttered environments, and why a deterministic tree alternation beats a random coin flip by nearly 5x in planning time. This project is my own ground-up implementation of a Bidirectional Expansive Space Tree, written in C++ and plugged directly into MoveIt 2 as a custom planning plugin for the UR5.
 
-The idea is straightforward — grow two trees, one from start and one from goal, and try to connect them. The hard part is making the exploration efficient. I used three techniques that made the difference: weighted roulette-wheel sampling to push the trees into under-explored regions, a tuned 18.5% goal bias to keep the growth directional, and Gaussian perturbation with joint-limit wrapping so the sampler respects the UR5's workspace without clipping. I tested across RViz, Gazebo, NVIDIA Isaac Sim, and on a physical UR5 — 95%+ success rate across all environments.
+The idea is straightforward: grow two trees, one from start and one from goal, and try to connect them. The hard part is making the exploration efficient. I used three techniques that made the difference: weighted roulette-wheel sampling to push the trees into under-explored regions, a tuned 18.5% goal bias to keep the growth directional, and Gaussian perturbation with joint-limit wrapping so the sampler respects the UR5's workspace without clipping. I tested across RViz, Gazebo, NVIDIA Isaac Sim, and on a physical UR5, achieving a 95%+ success rate across all environments.
 
 ## Demo
 
@@ -153,9 +153,9 @@ flowchart TB
 
 ### The Core Loop
 
-Every iteration, the planner picks one of the two trees to expand. I initially tried random selection — flip a coin, pick a tree. It worked, but it was slow. When I switched to a deterministic alternation (just toggle a boolean), planning time on the Bugatti obstacle scene dropped from 351ms to 72ms. That was a big lesson: in BiEST, balanced growth matters more than randomized fairness.
+Every iteration, the planner picks one of the two trees to expand. I initially tried random selection, essentially flipping a coin to pick a tree. It worked, but it was slow. When I switched to a deterministic alternation (just toggle a boolean), planning time on the Bugatti obstacle scene dropped from 351ms to 72ms. That was a big lesson: in BiEST, balanced growth matters more than randomized fairness.
 
-Each expansion attempt goes through a pipeline — select a vertex from the tree, sample a new configuration near it, check if the path to the sample is collision-free, and then see if the new vertex is close enough to the *other* tree to form a bridge.
+Each expansion attempt follows a pipeline. First, select a vertex from the tree. Then, sample a new configuration near it. Next, check if the path to the sample is collision-free. Finally, see if the new vertex is close enough to the *other* tree to form a bridge.
 
 ### Weighted Roulette-Wheel Sampling
 
@@ -179,7 +179,7 @@ The $\sigma = \pi$ gives wide coverage of the configuration space, and the modul
 
 ### Goal Biasing
 
-Pure random exploration is thorough but slow. To speed things up, I added a tunable "greediness dial" — with probability $p = 0.185$, the sampler skips the Gaussian perturbation entirely and just returns the target configuration:
+Pure random exploration is thorough but slow. To speed things up, I added a tunable "greediness dial." With probability $p = 0.185$, the sampler skips the Gaussian perturbation entirely and just returns the target configuration:
 
 $$\mathbf{q}^{\,\text{rand}} = \begin{cases} \mathbf{q}_{\text{target}} & \text{with probability } 0.185 \\ \mathbf{q} + \mathcal{N}(\mathbf{0},\, \pi\mathbf{I}) & \text{otherwise} \end{cases}$$
 
@@ -191,7 +191,7 @@ Before adding a new vertex to the tree, I need to verify that the straight-line 
 
 $$\mathbf{q}(t) \;=\; (1-t)\,\mathbf{q}_{\text{near}} \;+\; t\,\mathbf{q}_{\text{rand}}, \qquad t \in \{0.005,\; 0.01,\; \ldots,\; 1.0\}$$
 
-That's 200 collision checks per local path segment. At each interpolated configuration, MoveIt's `isStateColliding()` queries the full planning scene. A coarser resolution (say $\Delta t = 0.01$) would be faster but misses narrow passages — I learned that the hard way when the planner kept producing paths that clipped obstacle corners.
+That's 200 collision checks per local path segment. At each interpolated configuration, MoveIt's `isStateColliding()` queries the full planning scene. A coarser resolution (say $\Delta t = 0.01$) would be faster, but it misses narrow passages. I learned that the hard way when the planner kept producing paths that clipped obstacle corners.
 
 ### Bridge Detection and Path Recovery
 
@@ -199,7 +199,7 @@ After successfully adding a new vertex $\mathbf{q}_{\text{new}}$ to the expandin
 
 $$d\big(\mathbf{q}_{\text{new}},\; \mathbf{q}_{\text{nearest}}^{\,\text{other}}\big) \;=\; \left\|\mathbf{q}_{\text{new}} - \mathbf{q}_{\text{nearest}}^{\,\text{other}}\right\|_2 \;<\; \tau$$
 
-where the bridge threshold $\tau = 13$ (in C-space Euclidean distance). If the distance is below threshold *and* the local path between them is collision-free, the trees are connected. I then backtrack through each tree's parent array — from the bridge point back to each tree's root — and concatenate the two half-paths (reversing the goal-tree half so the full path runs start → goal).
+where the bridge threshold $\tau = 13$ (in C-space Euclidean distance). If the distance is below threshold *and* the local path between them is collision-free, the trees are connected. From there, I backtrack through each tree's parent array, walking from the bridge point back to each tree's root, and then concatenate the two half-paths. The goal-tree half gets reversed so the full path runs start to goal.
 
 The backtracking uses an iterative approach with a visited-node set to prevent cycles. Recursive backtracking would work too, but I didn't want to risk a stack overflow on deep trees.
 
