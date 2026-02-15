@@ -9,13 +9,23 @@
     display: flex;
   }
 
+  .header-cta {
+    display: none;
+  }
+
+  .brand-text {
+    display: none;
+  }
+
   .site-nav {
     position: fixed;
     top: var(--header-height);
     left: 0;
     right: 0;
-    background-color: var(--background-color);
-    border-bottom: 1px solid var(--border-color);
+    background: rgba(26, 35, 50, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(100, 181, 246, 0.1);
     transform: translateY(-100%);
     opacity: 0;
     visibility: hidden;
