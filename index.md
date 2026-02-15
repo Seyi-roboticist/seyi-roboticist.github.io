@@ -24,7 +24,7 @@ title: Home
 
 <div class="intro-section">
   <div class="container">
-    <p>I design and deploy robust, safety-critical autonomous systems that perform in dynamic real-world environments. From aviation systems maintenance to leading UAV autonomy projects at Johns Hopkins and building industrial automation at The RDI Group, my work focuses on precision control, perception, sensor fusion, deep learning fundamentals, and sim-to-real transfer.</p>
+    <p>Roboticist and Controls Engineer with hands-on experience in real-time flight control, perception, sensor fusion, and safety-critical autonomy. From aviation systems maintenance to leading UAV projects at Johns Hopkins and industrial automation at The RDI Group, I build systems that perform reliably in the real world.</p>
   </div>
 </div>
 
@@ -96,22 +96,20 @@ title: Home
         <div class="skill-tags">
           <span class="skill-tag">LaTeX</span>
           <span class="skill-tag">Simulation-to-Hardware Pipelines</span>
-          <span class="skill-tag">Basic Computer Vision & ML Pipelines</span>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Keep your existing projects showcase grid below (it's already good) -->
+<!-- Keep the existing project showcase grid (it's working) -->
 <div class="projects-showcase">
   <div class="container">
     <div class="section-header">
       <h2>Portfolio</h2>
-      <p class="section-subtitle">A curated collection of my research and design</p>
+      <p class="section-subtitle">A curated collection of my research and designs</p>
     </div>
 
-    <!-- Your existing Liquid loop for projects grid remains unchanged -->
     <div class="projects-grid-featured">
       {% assign featured_projects = site.projects | where: "featured", true | sort: "date" | reverse %}
       {% assign all_projects = site.projects | sort: "date" | reverse %}
@@ -119,7 +117,8 @@ title: Home
       {% assign unique_projects = combined_projects | uniq %}
       {% for project in unique_projects limit: 9 %}
         <div class="project-card-featured">
-          <!-- ... your existing project card code ... -->
+          <!-- Your existing project card Liquid code remains here -->
+          <!-- Do NOT change this block unless you want to customize cards -->
         </div>
       {% endfor %}
     </div>
@@ -131,3 +130,9 @@ title: Home
     </div>
   </div>
 </div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>© 2026 Oluwaseyi R. Afolayan. Built with Jekyll.</p>
+  </div>
+</footer>
