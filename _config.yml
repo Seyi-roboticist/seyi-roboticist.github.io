@@ -1,27 +1,28 @@
-# Site settings
-title: "MESGRO - Robotics & Mechatronics Portfolio"
-description: "An open-source template for showcasing robotics and mechatronics projects with 3D models, schematics, and code"
-url: "https://aojedao.github.io"
-baseurl: "/MESGRO"
-author: "Your Name"
-email: "your.email@example.com"
-github_username: "your-github-username"
-linkedin_username: "your-linkedin"
-twitter_username: "your-twitter"
+# Site settings 
+title: "Seyi R. Afolayan - (Roboticist) Controls & Autonomy Engineer"
+description: "Controls and autonomy engineer with expertise in modern robotics, real-time control systems, flight dynamics, sensor fusion, and state estimation."
+baseurl: "" # leave empty for username.github.io
+url: "https://seyi-roboticist.github.io"
+
+# Personal info: 
+author: 
+  name: "Oluwaseyi R. Afolayan"
+  title: "Roboticist"
+  tagline: "Real-time Control Systems · Flight Control · State Estimation · Sensor Fusion"
+  email: "seyirafolayan@gmail.com"
+  github: "Seyi-roboticist" 
+  linkedin: "seyi-afolayan"
 
 # Build settings
 markdown: kramdown
-highlighter: rouge
-plugins:
-  - jekyll-feed
-  - jekyll-sitemap
-  - jekyll-seo-tag
+theme: null
+plugins: []
 
 # Collections
 collections:
   projects:
     output: true
-    permalink: /:collection/:name/
+    permalink: /projects/:name/
 
 # Defaults
 defaults:
@@ -30,60 +31,24 @@ defaults:
       type: "projects"
     values:
       layout: "project"
-  - scope:
-      path: ""
-      type: "posts"
-    values:
-      layout: "post"
 
-# Exclude from processing
-exclude:
-  - Gemfile
-  - Gemfile.lock
-  - node_modules
-  - vendor/bundle/
-  - vendor/cache/
-  - vendor/gems/
-  - vendor/ruby/
-  - README.md
-  - LICENSE
 
-# Site navigation
-navigation:
-  - title: "Home"
-    url: "/"
-  - title: "Projects"
-    url: "/projects/"
-  - title: "About"
-    url: "/about/"
 
-# Project categories
-project_categories:
-  - name: "Robotics"
-    slug: "robotics"
-    description: "Autonomous robots and robotic systems"
-  - name: "Mechatronics"
-    slug: "mechatronics"
-    description: "Integration of mechanical, electrical, and software systems"
-  - name: "Arduino"
-    slug: "arduino"
-    description: "Arduino-based projects and prototypes"
-  - name: "3D Printing"
-    slug: "3d-printing"
-    description: "Custom 3D printed components and designs"
-  - name: "IoT"
-    slug: "iot"
-    description: "Internet of Things devices and applications"
 
-# 3D Model settings
-models:
-  supported_formats: ["stl", "obj", "gltf", "glb"]
-  default_background: "#f0f0f0"
-  camera_controls: true
-  auto_rotate: false
 
-# Schema settings
-schematics:
-  supported_formats: ["png", "jpg", "jpeg", "svg", "pdf"]
-  zoom_enabled: true
-  pan_enabled: true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
