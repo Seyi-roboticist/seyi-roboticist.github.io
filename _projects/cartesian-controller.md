@@ -8,11 +8,6 @@ featured_image: "/assets/images/projects/cartesian-controller/featured.jpg"
 github_url: "https://github.com/Seyi-roboticist/_controller_"
 demo_url: "https://www.youtube.com/watch?v=lPNE6-0R59k"
 
-gallery:
-  - type: "image"
-    file: "/assets/images/projects/cartesian-controller/ur5_realtime_control.gif"
-    description: "UR5 robot tracking Cartesian targets in real time at 500Hz"
-
 code_files:
   - name: "Damped Pseudo-Inverse Jacobian IK"
     file: "cartesian_controller.cpp"
@@ -130,8 +125,6 @@ code_files:
           return hardware_interface::return_type::OK;
       }
 ---
-
-## Overview
 
 I built a complete real-time Cartesian position controller for Universal Robots arms from scratch. Not a MoveIt wrapper. Not an off-the-shelf planner. The full pipeline: sensor hardware interface, socket-based data bridge, PID error computation, SVD-based Jacobian inversion, and velocity command generation. Every layer is designed for real-time performance with deterministic timing.
 
