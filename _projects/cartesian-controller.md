@@ -1,6 +1,6 @@
 ---
 layout: project
-title: "Real-Time Cartesian Controller for UR5/UR5e."
+title: "Real-Time Cartesian Controller for UR5/UR5e"
 description: "A three-package ROS 2 control framework for real-time end-effector positioning. SVD-based damped pseudo-inverse Jacobian with PID feedback achieving ±0.7mm accuracy at 500Hz on Universal Robots hardware."
 date: 2025-10-01
 categories: [Manipulation, Controls, Xacro, ROS2, C++, Python]
@@ -14,7 +14,7 @@ gallery:
     description: "UR5 robot tracking Cartesian targets in real time at 500Hz"
 
 code_files:
-  - name: "Sample Code Snippet: Damped Pseudo-Inverse Jacobian IK"
+  - name: "Damped Pseudo-Inverse Jacobian IK"
     file: "cartesian_controller.cpp"
     language: "cpp"
     download_url: "https://github.com/Seyi-roboticist/_controller_/blob/main/robotics_packages/controllers/cartesian_controller/src/cartesian_controller.cpp"
@@ -55,7 +55,7 @@ code_files:
           return true;
       }
 
-  - name: "Sample Code Snippet: PID with Anti-Windup"
+  - name: "PID with Anti-Windup"
     file: "cartesian_controller.cpp"
     language: "cpp"
     download_url: "https://github.com/Seyi-roboticist/_controller_/blob/main/robotics_packages/controllers/cartesian_controller/src/cartesian_controller.cpp"
@@ -93,7 +93,7 @@ code_files:
           }
       }
 
-  - name: "Sample Code Snippet: SE3 Sensor Hardware Interface"
+  - name: "SE3 Sensor Hardware Interface"
     file: "hardware_interface.cpp"
     language: "cpp"
     download_url: "https://github.com/Seyi-roboticist/_controller_/blob/main/robotics_packages/hardware_interfaces/se3_sensor_driver/src/hardware_interface.cpp"
@@ -131,226 +131,62 @@ code_files:
       }
 ---
 
-<h2>What This Is</h2>
+## Overview
 
-<div style="display: flex; flex-wrap: wrap; gap: 2rem; align-items: flex-start; margin: 1.5rem 0;">
-  <div style="flex: 1.2; min-width: 280px;">
-    <p>I built a complete real-time Cartesian position controller for Universal Robots arms from scratch. Not a MoveIt wrapper. Not an off-the-shelf planner. The full pipeline: sensor hardware interface, socket-based data bridge, PID error computation, SVD-based Jacobian inversion, and velocity command generation. Every layer is designed for real-time performance with deterministic timing.</p>
-    <p>The controller runs at 500Hz and achieves ±0.7mm positional accuracy across the full UR5e workspace. I validated it in Gazebo simulation first, then deployed it on real UR5 and UR5e hardware.</p>
-    <div style="margin-top: 1.5rem;">
-      <img src="/assets/images/projects/cartesian-controller/ur5_realtime_control.gif" alt="UR5 robot tracking Cartesian targets in real time" style="width:100%; border-radius: 8px;">
-      <p style="text-align:center; font-size: 0.85rem; opacity: 0.7; margin-top: 0.4rem;"><em>UR5 tracking dynamic Cartesian position targets at 500Hz.</em></p>
-    </div>
-  </div>
-  <div style="flex: 0.8; min-width: 240px; display: flex; flex-direction: column; gap: 1rem;">
-    <div>
-      <a href="https://www.youtube.com/watch?v=lPNE6-0R59k" target="_blank">
-        <img src="https://img.youtube.com/vi/lPNE6-0R59k/maxresdefault.jpg" alt="Simulation Demo" style="width:100%; border-radius: 8px;">
-      </a>
-      <p style="text-align:center; font-size: 0.85rem; opacity: 0.7; margin-top: 0.3rem;">Simulation Demo</p>
-    </div>
-    <div>
-      <a href="https://www.youtube.com/shorts/UKBMwUgmN18" target="_blank">
-        <img src="https://img.youtube.com/vi/UKBMwUgmN18/maxresdefault.jpg" alt="Live Hardware Demo" style="width:100%; border-radius: 8px;">
-      </a>
-      <p style="text-align:center; font-size: 0.85rem; opacity: 0.7; margin-top: 0.3rem;">Live Demo (UR5 Hardware)</p>
-    </div>
-    <div>
-      <a href="https://www.youtube.com/watch?v=FevBLPXetxo" target="_blank">
-        <img src="https://img.youtube.com/vi/FevBLPXetxo/maxresdefault.jpg" alt="RViz Visualization" style="width:100%; border-radius: 8px;">
-      </a>
-      <p style="text-align:center; font-size: 0.85rem; opacity: 0.7; margin-top: 0.3rem;">RViz Visualization</p>
-    </div>
-  </div>
-</div>
+I built a complete real-time Cartesian position controller for Universal Robots arms from scratch. Not a MoveIt wrapper. Not an off-the-shelf planner. The full pipeline: sensor hardware interface, socket-based data bridge, PID error computation, SVD-based Jacobian inversion, and velocity command generation. Every layer is designed for real-time performance with deterministic timing.
 
-<h2>System Architecture</h2>
+The controller runs at 500Hz and achieves ±0.7mm positional accuracy across the full UR5e workspace. I validated it in Gazebo simulation first, then deployed it on real UR5 and UR5e hardware.
 
-<div style="width:100%; overflow-x:auto; margin: 2rem 0;">
+## Demos
 
-```
- ┌─────────────────────────────────────────────────────────────────────┐
- │                        SYSTEM OVERVIEW                             │
- └─────────────────────────────────────────────────────────────────────┘
+[![Simulation Demo](https://img.youtube.com/vi/lPNE6-0R59k/maxresdefault.jpg)](https://www.youtube.com/watch?v=lPNE6-0R59k)
 
- ┌──────────────┐      ┌───────────────────┐      ┌─────────────────┐
- │              │      │                   │      │                 │
- │  SE3 Sensor  │─────▶│  TF Lookup Server │─────▶│  SE3 Hardware   │
- │  (External)  │ TF   │  (ROS 2 Node)     │ TCP  │  Interface      │
- │              │      │                   │ /IP  │  (ros2_control) │
- └──────────────┘      └───────────────────┘      └────────┬────────┘
-                                                           │
-                        ┌──────────────────────────────────┘
-                        │  SE3 Pose Data [x y z qx qy qz qw]
-                        ▼
-              ┌───────────────────────┐
-              │                       │
-              │  Cartesian Controller │
-              │  (ros2_control)       │
-              │                       │
-              │  ┌─────────────────┐  │
-              │  │ PID Controller  │  │
-              │  │ Kp, Ki, Kd      │  │
-              │  │ + Anti-Windup   │  │
-              │  └────────┬────────┘  │
-              │           │           │
-              │  ┌────────▼────────┐  │
-              │  │ Jacobian IK     │  │
-              │  │ SVD + Tikhonov  │  │
-              │  │ Damped Pseudo-  │  │
-              │  │ Inverse         │  │
-              │  └────────┬────────┘  │
-              │           │           │
-              └───────────┼───────────┘
-                          │  Joint Velocity Commands
-                          ▼
-              ┌───────────────────────┐
-              │                       │
-              │   UR5 / UR5e Robot    │
-              │   (Real or Gazebo)    │
-              │                       │
-              └───────────────────────┘
-```
+**Simulation**: UR5e tracking dynamic Cartesian targets in Gazebo with RViz visualization overlay.
 
-</div>
+[![Live Hardware Demo](https://img.youtube.com/vi/UKBMwUgmN18/maxresdefault.jpg)](https://www.youtube.com/shorts/UKBMwUgmN18)
 
-The system is organized into three ROS 2 packages:
+**Live Demo**: Real UR5 robot executing Cartesian position commands on hardware.
 
-```
-robotics_packages/
-├── hardware_interfaces/
-│   └── se3_sensor_driver/            # ros2_control sensor plugin
-│       ├── hardware_interface.cpp    # TCP socket <-> ros2_control bridge
-│       ├── tf_lookup_server.cpp      # TF to serialized pose over TCP
-│       └── urdf/se3_sensor.xacro     # Parameterized sensor URDF macro
-├── controllers/
-│   └── cartesian_controller/         # ros2_control controller plugin
-│       ├── cartesian_controller.cpp  # PID + Jacobian IK
-│       └── cartesian_controller.hpp  # Full class declaration
-└── applications/
-    └── ur5e_cartesian_control/       # Launch, config, URDF
-        ├── ur5e.launch.py            # Unified launch (sim + real)
-        ├── ur5e_controllers.yaml     # Tuned PID and IK parameters
-        └── urdf/ur5e_with_sensors.xacro  # Robot + sensor integration
-```
+[![RViz Visualization](https://img.youtube.com/vi/FevBLPXetxo/maxresdefault.jpg)](https://www.youtube.com/watch?v=FevBLPXetxo)
 
-<h2>How the Inverse Kinematics Works</h2>
+**Visualization**: TF frames, target tracking, and error convergence in real time.
 
-The core of the controller is a position-only Cartesian IK solver using SVD decomposition of the manipulator Jacobian. I extract the top 3 rows of the 6×n Jacobian matrix, solving only for translational velocity while ignoring orientation. This is a deliberate design choice for tasks where end-effector orientation is unconstrained.
+## System Architecture
 
-Tikhonov regularization (damped least squares) handles singularities gracefully. Each singular value σᵢ is replaced with σᵢ/(σᵢ² + λ²), where λ is the damping factor. This trades tracking accuracy for joint velocity smoothness when the manipulability index drops near singular configurations. In practice, the arm slows down instead of generating unbounded joint velocities.
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true, theme:'dark'});</script>
 
-<h2>PID Controller Design</h2>
+<pre class="mermaid">
+flowchart LR
+    A["SE3 Sensor"] -->|TF Broadcast| B["TF Lookup Server"]
+    B -->|TCP/IP Socket| C["SE3 Hardware Interface"]
+    C -->|Pose Data| D["Cartesian Controller"]
+    D -->|Joint Velocity Cmds| E["UR5 / UR5e"]
 
-The Cartesian error computation uses a full PID controller with configurable gains per axis. I added anti-windup clamping on the integral term to prevent excessive buildup during sustained errors or when the arm is physically blocked. The derivative term provides damping to reduce overshoot during fast target transitions.
+    subgraph Controller["Controller Core"]
+        direction TB
+        F["PID: Kp + Ki + Kd + Anti-Windup"] --> G["Jacobian IK: SVD + Tikhonov Damping"]
+    end
+</pre>
 
-The gains I tuned for the UR5e after extensive testing:
+Three ROS 2 packages: `se3_sensor_driver` (hardware interface reading pose data over TCP), `cartesian_controller` (PID + Jacobian IK), and `ur5e_cartesian_control` (launch, config, URDF).
 
-| Parameter | Value | Purpose |
-|---|---|---|
-| Kp | [2.2, 2.2, 2.2] | Proportional gains |
-| Ki | [0.02, 0.02, 0.02] | Integral gains |
-| Kd | [0.5, 0.5, 0.5] | Derivative gains |
-| λ | 0.05 | Jacobian damping factor |
-| Velocity scaling | 0.07 | Motion speed limit |
+## How It Works
 
-<h2>SE3 Sensor Hardware Interface</h2>
+The core is a position-only Cartesian IK solver using SVD decomposition of the manipulator Jacobian. I extract the top 3 rows of the 6x6 Jacobian, solving only for translational velocity while ignoring orientation. Tikhonov regularization handles singularities gracefully: each singular value is replaced with sigma_i/(sigma_i^2 + lambda^2). The arm slows down near singularities instead of generating unbounded joint velocities.
 
-The `se3_sensor_driver` package implements a ros2_control `SensorInterface` plugin that reads SE3 pose data over TCP sockets. The architecture includes a separate TF Lookup Server node, which is a multithreaded ROS 2 node with dedicated callback groups for timer-driven TF lookups and socket accept/write operations.
+The Cartesian error computation uses a full PID controller with anti-windup clamping on the integral term. Tuned gains for the UR5e: Kp=2.2, Ki=0.02, Kd=0.5, damping lambda=0.05, velocity scaling=0.07. A single unified launch file supports real robot, Gazebo simulation, and fake hardware for CI testing.
 
-The socket protocol uses size-prefixed ROS 2 serialized messages: a 4-byte message length header followed by the CDR-serialized `PoseStamped` payload. The hardware interface handles reconnection with configurable retry attempts and delay, and uses non-blocking sockets to prevent the real-time control loop from stalling on network I/O.
+## Results
 
-<h2>Deployment Modes</h2>
-
-A single unified launch file (`ur5e.launch.py`) supports three deployment modes:
-
-| Mode | Command | Use Case |
-|---|---|---|
-| Real Robot | `use_fake:=false robot_ip:=<IP>` | Production deployment on UR5/UR5e |
-| Gazebo Sim | `use_fake:=true use_gazebo:=true` | Physics simulation and testing |
-| Fake Hardware | `use_fake:=true` | Unit testing and CI pipelines |
-
-Dynamic target updates during operation work through TF. You publish a static transform to `target_sensor_frame` and the controller smoothly tracks the new position in real time.
-
-<h2>Performance Results</h2>
-
-| Metric | Measured Value |
+| Metric | Value |
 |---|---|
 | Control loop rate | 500 Hz |
 | Position accuracy | ±0.7 mm |
-| Convergence time | < 3 seconds for 50cm movements |
-| Workspace | Full UR5e operational envelope |
+| Convergence time | < 3 sec (50cm moves) |
+| Workspace | Full UR5e envelope |
 | Singularity behavior | Graceful slowdown via Tikhonov damping |
 
-<h2>Links</h2>
+## Links
 
-**View on GitHub**: [https://github.com/Seyi-roboticist/_controller_](https://github.com/Seyi-roboticist/_controller_)
-
-**Simulation Demo**: [https://www.youtube.com/watch?v=lPNE6-0R59k](https://www.youtube.com/watch?v=lPNE6-0R59k)
-
-**Live Demo**: [https://www.youtube.com/shorts/UKBMwUgmN18](https://www.youtube.com/shorts/UKBMwUgmN18)
-
-**Visualization Demo**: [https://www.youtube.com/watch?v=FevBLPXetxo](https://www.youtube.com/watch?v=FevBLPXetxo)
-
-<style>
-/* Force all content sections open and remove accordion toggles */
-.project-content .section-header .toggle-icon,
-.project-content .section-toggle,
-.project-content .accordion-toggle,
-.project-content h2 .toggle-btn,
-.project-content h2 + .collapse-toggle,
-.project-content .content-section > h2 ~ .toggle,
-.project-content .section-header::after {
-  display: none !important;
-}
-
-.project-content .section-content,
-.project-content .accordion-content,
-.project-content .collapse-content,
-.project-content .content-section .section-body {
-  display: block !important;
-  max-height: none !important;
-  overflow: visible !important;
-  opacity: 1 !important;
-  height: auto !important;
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Auto-expand all content sections (not code files)
-  var projectContent = document.querySelector('.project-content') || document.querySelector('.project-description') || document.querySelector('article');
-  if (!projectContent) return;
-
-  // Find all collapsed/hidden sections and force them open
-  var allSections = projectContent.querySelectorAll('[class*="collapse"], [class*="accordion"], [class*="section"]');
-  allSections.forEach(function(section) {
-    section.style.display = 'block';
-    section.style.maxHeight = 'none';
-    section.style.overflow = 'visible';
-    section.style.opacity = '1';
-    section.style.height = 'auto';
-    section.classList.add('active', 'open', 'show', 'expanded');
-    section.classList.remove('collapsed', 'closed', 'hide');
-  });
-
-  // Hide all toggle buttons/icons (+/- symbols) in content sections
-  var toggles = projectContent.querySelectorAll('[class*="toggle"], [class*="collapse-btn"], [class*="accordion-btn"]');
-  toggles.forEach(function(toggle) {
-    // Don't hide toggles inside code file sections
-    if (!toggle.closest('[class*="code"]')) {
-      toggle.style.display = 'none';
-    }
-  });
-
-  // Remove click handlers on h2 elements to prevent re-collapsing
-  var headings = projectContent.querySelectorAll('h2');
-  headings.forEach(function(h2) {
-    // Don't affect code file headings
-    if (!h2.closest('[class*="code"]')) {
-      var newH2 = h2.cloneNode(true);
-      h2.parentNode.replaceChild(newH2, h2);
-    }
-  });
-});
-</script>
+[View on GitHub](https://github.com/Seyi-roboticist/_controller_) | [Simulation Demo](https://www.youtube.com/watch?v=lPNE6-0R59k) | [Live Demo](https://www.youtube.com/shorts/UKBMwUgmN18) | [RViz Visualization](https://www.youtube.com/watch?v=FevBLPXetxo)
