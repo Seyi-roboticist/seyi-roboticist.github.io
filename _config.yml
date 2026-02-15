@@ -1,54 +1,26 @@
-# Site settings 
-title: "Seyi R. Afolayan - (Roboticist) Controls & Autonomy Engineer"
-description: "Controls and autonomy engineer with expertise in modern robotics, real-time control systems, flight dynamics, sensor fusion, and state estimation."
-baseurl: "" # leave empty for username.github.io
+title: "Seyi R. Afolayan - Controls & Autonomy Engineer"
+description: "Roboticist specializing in real-time controls, UAV autonomy, perception, and sensor fusion."
+baseurl: ""
 url: "https://seyi-roboticist.github.io"
 
-# Personal info: 
-author: 
+author:
   name: "Oluwaseyi R. Afolayan"
-  title: "Roboticist"
-  tagline: "Real-time Control Systems · Flight Control · State Estimation · Sensor Fusion"
   email: "seyirafolayan@gmail.com"
-  github: "Seyi-roboticist" 
-  linkedin: "seyi-afolayan"
+  github: "Seyi-roboticist"
+  linkedin: "oluwaseyi-r-afolayan-4b8330206"  # adjust if needed
 
-# Build settings
 markdown: kramdown
-theme: null
-plugins: []
+highlighter: rouge
 
-# Collections
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Remove or comment out any 'theme:' line
+# theme: null  # or delete this line entirely
+
 collections:
   projects:
     output: true
     permalink: /projects/:name/
-
-# Defaults
-defaults:
-  - scope:
-      path: ""
-      type: "projects"
-    values:
-      layout: "project"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
