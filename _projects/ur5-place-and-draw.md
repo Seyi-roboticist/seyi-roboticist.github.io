@@ -183,6 +183,40 @@ Each scheme traces a different path through joint space to achieve the same Cart
 | Path accuracy | Exact (at waypoints) | High | Moderate |
 | Computational cost | Low per step | Medium | Low |
 
+## Foundations: FK, Jacobian, and Manipulability
+
+Before we could run any of the control schemes, we needed solid implementations of the underlying kinematics. These functions formed the foundation that everything else built on top of.
+
+### Forward Kinematics via Product of Exponentials
+
+We computed the UR5's forward kinematics using the Product of Exponentials (POE) formulation rather than DH parameters. Each joint defines a twist $\boldsymbol{\xi}_i \in \mathbb{R}^6$ composed of an axis direction and a point on that axis. The forward kinematics map is then:
+
+$$T(\mathbf{q}) \;=\; e^{[\boldsymbol{\xi}_1]\,q_1} \;\cdot\; e^{[\boldsymbol{\xi}_2]\,q_2} \;\cdot\; \cdots \;\cdot\; e^{[\boldsymbol{\xi}_6]\,q_6} \;\cdot\; M$$
+
+where $M \in SE(3)$ is the robot's home configuration (all joints at zero) and each $e^{[\boldsymbol{\xi}_i]\,q_i}$ is the matrix exponential of the twist scaled by the joint angle. The twists were derived from the UR5 schematic, with all link lengths specified in meters to match RViz's metric system.
+
+The POE formulation has a nice property: adding or removing joints is just a matter of adding or removing exponential terms. There are no link frame assignments to worry about, which makes it less error-prone than DH for a 6-DOF arm.
+
+### Body Jacobian and Its Estimate
+
+The body Jacobian $J_b(\mathbf{q}) \in \mathbb{R}^{6 \times 6}$ maps joint velocities to the end-effector twist expressed in the body frame. We implemented two versions: the analytical Jacobian computed directly from the adjoint transforms of each twist, and a numerical estimate obtained by introducing small perturbations $\delta q_i$ to each joint and computing the resulting change in the forward kinematics:
+
+$$\hat{J}_b(:,\,i) \;\approx\; \frac{1}{\delta q_i} \; \log\!\Big(T(\mathbf{q})^{-1} \;\cdot\; T(\mathbf{q} + \delta q_i \,\mathbf{e}_i)\Big)$$
+
+where $\log(\cdot)$ extracts the twist from the resulting transformation. The norm of the difference between the analytical and estimated Jacobians was consistently below $1 \times 10^{-10}$, which validated both implementations. This matters because the resolved-rate controller depends entirely on the Jacobian being correct, so having two independent computations that agree to 10 decimal places gave us real confidence before deploying on hardware.
+
+### Manipulability Near Singularities
+
+We also implemented a manipulability analysis function to characterize how "well-conditioned" the robot is at any given configuration. The classic Yoshikawa manipulability measure is:
+
+$$\mu(\mathbf{q}) \;=\; \sqrt{\det\!\big(J_b(\mathbf{q}) \;\cdot\; J_b(\mathbf{q})^T\big)}$$
+
+This goes to zero at singular configurations, where the robot loses one or more degrees of freedom. We tested this by sweeping two known singularities of the UR5. The first occurs at $\theta_3 = 0$ (elbow fully extended), and the second at $\theta_5 = 0$ (wrist aligned with the forearm). For each sweep, we held all other joints at safe values and varied the singular joint across $[-\frac{\pi}{4},\; \frac{\pi}{4}]$:
+
+$$\boldsymbol{\theta}_{\,\theta_3\text{ sweep}} = \begin{bmatrix} 0.5 \\ 0.7 \\ \theta_3 \\ 1.0 \\ 1.2 \\ 1.4 \end{bmatrix}, \qquad \boldsymbol{\theta}_{\,\theta_5\text{ sweep}} = \begin{bmatrix} 0.5 \\ 0.7 \\ 0.9 \\ 1.0 \\ \theta_5 \\ 1.4 \end{bmatrix}$$
+
+In both cases, the manipulability function dropped sharply toward zero as the joint approached the singular value, which confirmed that our Jacobian and manipulability implementations were correctly identifying the UR5's kinematic limitations. This analysis also informed where we could safely run the resolved-rate controller (which inverts the Jacobian) versus where the Jacobian transpose was the safer choice.
+
 ## The Batman (Extra Credit)
 
 I came up with this one because I figured if we're going to draw shapes with a robot, we might as well draw something memorable. I hand-plotted 70 points that approximate the Batman logo outline, using gradient ascent and descent techniques to trace the contour. The points live in a 2D plane ($x$, $y$ coordinates in centimeters), and each one gets mapped to a full $SE(3)$ tool pose by fixing the orientation and setting the $z$-height constant. From there, the IK controller steps through every point sequentially, and the UR5 traces the shape on the physical workspace.
