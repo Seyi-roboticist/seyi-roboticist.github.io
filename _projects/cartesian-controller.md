@@ -4,7 +4,7 @@ title: "Real-Time Cartesian Controller for UR5/UR5e"
 description: "A three-package ROS 2 control framework for real-time end-effector positioning. SVD-based damped pseudo-inverse Jacobian with PID feedback achieving ±0.7mm accuracy at 500Hz on Universal Robots hardware."
 date: 2025-10-01
 categories: [Manipulation, Controls, Xacro, ROS2, C++, Python]
-featured_image: "/assets/images/projects/cartesian-controller/featured.png"
+featured_image: "/assets/images/projects/cartesian-controller/ur5_control.gif"
 github_url: "https://github.com/Seyi-roboticist/_controller_"
 demo_url: "https://www.youtube.com/watch?v=lPNE6-0R59k"
 
@@ -146,21 +146,7 @@ The controller runs at 500Hz and achieves ±0.7mm positional accuracy across the
 
 ## System Architecture
 
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-<script>mermaid.initialize({startOnLoad:true, theme:'dark'});</script>
-
-<pre class="mermaid">
-flowchart LR
-    A["SE3 Sensor"] -->|TF Broadcast| B["TF Lookup Server"]
-    B -->|TCP/IP Socket| C["SE3 Hardware Interface"]
-    C -->|Pose Data| D["Cartesian Controller"]
-    D -->|Joint Velocity Cmds| E["UR5 / UR5e"]
-
-    subgraph Controller["Controller Core"]
-        direction TB
-        F["PID: Kp + Ki + Kd + Anti-Windup"] --> G["Jacobian IK: SVD + Tikhonov Damping"]
-    end
-</pre>
+![Complete System Architecture](/assets/images/projects/cartesian-controller/system_architecture.png)
 
 Three ROS 2 packages: `se3_sensor_driver` (hardware interface reading pose data over TCP), `cartesian_controller` (PID + Jacobian IK), and `ur5e_cartesian_control` (launch, config, URDF).
 
