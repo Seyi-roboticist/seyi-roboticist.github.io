@@ -116,9 +116,9 @@ code_files:
 
 ## Overview
 
-This project implements a custom Bidirectional Expansive Space Tree (BiEST) motion planner for the UR5 6-DOF manipulator, integrated as a MoveIt 2 planning plugin within ROS 2. The planner grows two trees simultaneously — one from the start configuration and one from the goal — and attempts to bridge them through shared configuration space. It was developed for the graduate-level *Algorithms for Sensor-Based Robotics* course at Johns Hopkins University and tested across RViz, Gazebo, NVIDIA Isaac Sim, and physical UR5 hardware.
+I built this as part of *Algorithms for Sensor-Based Robotics* (EN.601.463/663) at Johns Hopkins — a graduate course I later TA'd for two semesters, mentoring 80+ students through these exact types of motion planning problems. Having seen dozens of students struggle with sampling-based planners (EST, RRT, RRT*, PRM), I know firsthand where the intuition breaks down: why weighted sampling matters, how goal bias interacts with cluttered environments, and why a deterministic tree alternation beats a random coin flip by nearly 5x in planning time. This project is my own ground-up implementation of a Bidirectional Expansive Space Tree, written in C++ and plugged directly into MoveIt 2 as a custom planning plugin for the UR5.
 
-The core algorithm combines three techniques for efficient exploration: weighted roulette-wheel sampling that favors under-explored regions of the tree, Gaussian perturbation in joint space with wrap-around for the UR5's $[-\pi, \pi]$ joint limits, and an 18.5% goal-biasing probability that periodically steers exploration toward the target configuration. Once both trees grow close enough (within a configurable threshold), a bridge connection is attempted with collision checking along the local path. The final trajectory is recovered by backtracking through each tree's parent chain and concatenating the two half-paths.
+The idea is straightforward — grow two trees, one from start and one from goal, and try to connect them. The hard part is making the exploration efficient. I used three techniques that made the difference: weighted roulette-wheel sampling to push the trees into under-explored regions, a tuned 18.5% goal bias to keep the growth directional, and Gaussian perturbation with joint-limit wrapping so the sampler respects the UR5's workspace without clipping. I tested across RViz, Gazebo, NVIDIA Isaac Sim, and on a physical UR5 — 95%+ success rate across all environments.
 
 ## Demo
 
@@ -149,45 +149,59 @@ flowchart TB
     M --> N["Interpolated Trajectory → RViz"]
 </pre>
 
-## Algorithm Details
+## How It Works
 
-### Bidirectional Tree Growth
+### The Core Loop
 
-The BiEST planner maintains two trees rooted at the start and goal configurations. On each iteration, the algorithm alternates which tree expands — a deterministic toggle that proved more efficient than random selection (72ms vs 351ms planning time for complex scenes). Each expansion attempt follows this pipeline:
+Every iteration, the planner picks one of the two trees to expand. I initially tried random selection — flip a coin, pick a tree. It worked, but it was slow. When I switched to a deterministic alternation (just toggle a boolean), planning time on the Bugatti obstacle scene dropped from 351ms to 72ms. That was a big lesson: in BiEST, balanced growth matters more than randomized fairness.
 
-1. **Select** a vertex from the active tree using weighted roulette-wheel sampling
-2. **Sample** a nearby configuration with Gaussian noise ($\sigma = \pi$) and optional goal bias
-3. **Find** the nearest vertex in the tree to the new sample (Euclidean norm in C-space)
-4. **Validate** the local path between nearest and sample via discretized collision checking
-5. **Check** if the new vertex bridges to the opposing tree within the threshold distance
+Each expansion attempt goes through a pipeline — select a vertex from the tree, sample a new configuration near it, check if the path to the sample is collision-free, and then see if the new vertex is close enough to the *other* tree to form a bridge.
 
-### Weighted Exploration
+### Weighted Roulette-Wheel Sampling
 
-Each vertex in the tree carries a weight that inversely decays with its parent's weight:
+The key insight behind EST is that you don't want to keep expanding from the same well-explored nodes. You want the tree to push outward into new territory. I handle this with a weight on every vertex. When a new node gets added, its weight is:
 
-$$w_{\text{new}} = \frac{1}{1 + w_{\text{parent}}}$$
+$$w_{\text{child}} \;=\; \frac{1}{1 \;+\; w_{\text{parent}}}$$
 
-This means vertices spawned from heavily-explored regions get lower weights, while vertices in sparse regions retain higher weights. The roulette-wheel selector draws from the cumulative weight distribution, naturally biasing expansion toward under-explored areas of the configuration space.
+So a vertex spawned from a heavily-explored parent (high $w$) gets a *low* weight, while vertices in sparse regions keep their high weights. To actually select which vertex to expand from, I use roulette-wheel sampling over the cumulative weight distribution:
+
+$$P(\text{select vertex } i) \;=\; \frac{w_i}{\displaystyle\sum_{j=1}^{|V|} w_j}$$
+
+I draw a random point $r \sim \mathcal{U}\!\left(0,\; \sum w_j\right)$ and walk the cumulative distribution until I find the vertex that "owns" that point. Vertices with higher weights occupy larger intervals, so they get selected more often. This naturally drives exploration toward the sparse frontiers of the tree.
+
+### Gaussian Perturbation with Joint-Limit Wrapping
+
+Once I've selected a vertex $\mathbf{q}$ to expand from, I need to generate a nearby sample. I add Gaussian noise independently to each joint:
+
+$$q_i^{\,\text{rand}} \;=\; \Big(\big(q_i \;+\; \underbrace{\mathcal{N}(0,\,\pi)}_{\text{noise}}\big) + \pi\Big) \bmod 2\pi \;\;-\;\; \pi$$
+
+The $\sigma = \pi$ gives wide coverage of the configuration space, and the modular arithmetic wraps the result back into the UR5's joint limits $[-\pi,\,\pi]$ without clipping or rejection. If the resulting configuration is in collision, I retry up to 1000 times before falling back to the original vertex.
 
 ### Goal Biasing
 
-With probability $p = 0.185$, the sampler bypasses Gaussian perturbation and directly returns the target configuration (the opposing tree's root). This acts as a "greediness dial" — too low and the trees wander aimlessly, too high and the planner gets stuck trying to force direct connections through cluttered environments. The 18.5% value was empirically tuned across multiple obstacle scenarios.
+Pure random exploration is thorough but slow. To speed things up, I added a tunable "greediness dial" — with probability $p = 0.185$, the sampler skips the Gaussian perturbation entirely and just returns the target configuration:
 
-### Gaussian Sampling with Joint-Limit Wrapping
+$$\mathbf{q}^{\,\text{rand}} = \begin{cases} \mathbf{q}_{\text{target}} & \text{with probability } 0.185 \\ \mathbf{q} + \mathcal{N}(\mathbf{0},\, \pi\mathbf{I}) & \text{otherwise} \end{cases}$$
 
-New configurations are generated by adding Gaussian noise ($\mu = 0, \sigma = \pi$) to each joint independently, then wrapping the result into $[-\pi, \pi]$:
+I landed on 18.5% after a lot of trial and error. Too high and the planner wastes iterations trying to force direct paths through obstacles. Too low and the trees grow aimlessly. This value gave me the best balance between directed growth and exploratory coverage across different obstacle scenes.
 
-$$q_i^{\text{rand}} = \left((q_i + \mathcal{N}(0, \pi) + \pi) \bmod 2\pi\right) - \pi$$
+### Collision Checking Along Local Paths
 
-This ensures full workspace coverage while respecting the UR5's joint limits. If the resulting configuration collides, the sampler retries up to 1000 times before returning the original configuration.
+Before adding a new vertex to the tree, I need to verify that the straight-line path in C-space between the nearest existing vertex and the new sample is collision-free. I do this by interpolating between the two configurations at a resolution of $\Delta t = 0.005$:
 
-### Collision Checking
+$$\mathbf{q}(t) \;=\; (1-t)\,\mathbf{q}_{\text{near}} \;+\; t\,\mathbf{q}_{\text{rand}}, \qquad t \in \{0.005,\; 0.01,\; \ldots,\; 1.0\}$$
 
-Local paths between configurations are validated by discretized interpolation at resolution $\Delta t = 0.005$ (200 checkpoints per segment). At each interpolated configuration, MoveIt's `isStateColliding()` queries the planning scene against all registered obstacles. This fine resolution catches narrow passages that coarser checks would miss.
+That's 200 collision checks per local path segment. At each interpolated configuration, MoveIt's `isStateColliding()` queries the full planning scene. A coarser resolution (say $\Delta t = 0.01$) would be faster but misses narrow passages — I learned that the hard way when the planner kept producing paths that clipped obstacle corners.
 
-### Path Recovery
+### Bridge Detection and Path Recovery
 
-Once a bridge is found, the algorithm backtrackd through each tree's parent array using iterative backtracking (not recursive, to avoid stack overflow on deep trees). A visited-node check prevents cycles. The two half-paths are concatenated — the root path forward, the goal path reversed — producing the complete collision-free trajectory.
+After successfully adding a new vertex $\mathbf{q}_{\text{new}}$ to the expanding tree, I check its distance to the *nearest* vertex in the opposing tree:
+
+$$d\big(\mathbf{q}_{\text{new}},\; \mathbf{q}_{\text{nearest}}^{\,\text{other}}\big) \;=\; \left\|\mathbf{q}_{\text{new}} - \mathbf{q}_{\text{nearest}}^{\,\text{other}}\right\|_2 \;<\; \tau$$
+
+where the bridge threshold $\tau = 13$ (in C-space Euclidean distance). If the distance is below threshold *and* the local path between them is collision-free, the trees are connected. I then backtrack through each tree's parent array — from the bridge point back to each tree's root — and concatenate the two half-paths (reversing the goal-tree half so the full path runs start → goal).
+
+The backtracking uses an iterative approach with a visited-node set to prevent cycles. Recursive backtracking would work too, but I didn't want to risk a stack overflow on deep trees.
 
 ## Results
 
@@ -195,12 +209,12 @@ Once a bridge is found, the algorithm backtrackd through each tree's parent arra
 |---|---|
 | Planning success rate | 95%+ across test scenarios |
 | Planning time (simple scene) | ~72 ms |
-| Planning time (Bugatti obstacle) | ~351 ms (random) / ~72 ms (alternating) |
-| Collision check resolution | 200 points per segment ($\Delta t = 0.005$) |
-| Goal bias probability | 18.5% |
-| Bridge threshold | 13 rad (C-space Euclidean) |
+| Planning time (cluttered scene) | ~72 ms (alternating) vs ~351 ms (random) |
+| Collision resolution | 200 points per segment |
+| Goal bias | 18.5% |
+| Bridge threshold | $\tau = 13$ |
 | Max iterations | 11,300 |
-| Tested platforms | RViz, Gazebo, Isaac Sim, physical UR5 |
+| Tested on | RViz, Gazebo, Isaac Sim, physical UR5 |
 
 ## Links
 
