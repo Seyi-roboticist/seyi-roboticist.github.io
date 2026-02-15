@@ -3,19 +3,21 @@ layout: default
 title: Home
 ---
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+
 <div class="hero-personal">
   <div class="container">
     <div class="hero-content">
       <div class="hero-info-wrapper">
         <div class="hero-text">
           <h1 class="hero-name">Oluwaseyi R. Afolayan</h1>
-          <p class="hero-title">Controls & Autonomy Engineer</p>
-          <p class="hero-tagline">Flight Controls · State Estimation · Real-Time Systems · UAV Autonomy</p>
+          <p class="hero-title">Full-Stack Roboticist</p>
+          <p class="hero-tagline">Control Systems · Perception · Autonomy · Manipulation · Flight Controls</p>
         </div>
 
         <div class="hero-actions">
-          <a href="/about/" class="btn-primary">About Me</a>
-          <a href="/projects/" class="btn-secondary">View Projects</a>
+          <a href="{{ '/about/' | relative_url }}" class="btn-primary">About Me</a>
+          <a href="{{ '/projects/' | relative_url }}" class="btn-secondary">View Projects</a>
         </div>
       </div>
     </div>
@@ -24,7 +26,7 @@ title: Home
 
 <div class="intro-section">
   <div class="container">
-    <p>Controls and autonomy engineer specializing in flight dynamics, state estimation, and real-time systems. I design, model, and deploy control systems from first-principles math through hardware — fixed-wing and rotary-wing UAVs, precision manipulators, and safety-critical industrial automation.</p>
+    <p>I build robots that manipulate, navigate, and fly. From precision arm control at 500Hz to autonomous UAV systems to deep learning for 3D reconstruction — I work across the full stack, from first-principles math through real hardware deployment.</p>
   </div>
 </div>
 
@@ -32,63 +34,130 @@ title: Home
   <div class="container">
     <h2>Technical Expertise</h2>
     <div class="skills-grid">
+
       <div class="skill-category">
-        <h3>Controls & Estimation</h3>
+        <h3>🦾 Manipulation & Motion Control</h3>
         <div class="skill-tags">
-          <span class="skill-tag">PID/PIR Tuning</span>
-          <span class="skill-tag">Sensor Fusion</span>
-          <span class="skill-tag">EKF/UKF</span>
-          <span class="skill-tag">Successive Loop Closure</span>
-          <span class="skill-tag">Stability Analysis</span>
-          <span class="skill-tag">State-Space Methods</span>
+          <span class="skill-tag">Jacobian IK</span>
+          <span class="skill-tag">500Hz Servo Loops</span>
+          <span class="skill-tag">ros2_control</span>
+          <span class="skill-tag">Singularity Handling</span>
+          <span class="skill-tag">UR5/UR5e</span>
         </div>
       </div>
 
       <div class="skill-category">
-        <h3>Perception & Machine Learning</h3>
+        <h3>🛩️ Flight Controls & GNC</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">6DOF Modeling</span>
+          <span class="skill-tag">Successive Loop Closure</span>
+          <span class="skill-tag">PID/PIR</span>
+          <span class="skill-tag">Stability Analysis</span>
+          <span class="skill-tag">EKF Sensor Fusion</span>
+        </div>
+      </div>
+
+      <div class="skill-category">
+        <h3>👁️ Perception & Deep Learning</h3>
         <div class="skill-tags">
           <span class="skill-tag">Computer Vision (OpenCV)</span>
-          <span class="skill-tag">Deep Learning</span>
+          <span class="skill-tag">Deep Learning (PyTorch)</span>
+          <span class="skill-tag">NeRF</span>
           <span class="skill-tag">Machine Perception</span>
-          <span class="skill-tag">Sim-to-Real Transfer</span>
+          <span class="skill-tag">Sim-to-Real</span>
         </div>
       </div>
 
       <div class="skill-category">
-        <h3>Robotics Frameworks & Tools</h3>
+        <h3>🤖 Autonomy & Navigation</h3>
         <div class="skill-tags">
           <span class="skill-tag">ROS 2</span>
-          <span class="skill-tag">Gazebo</span>
-          <span class="skill-tag">NVIDIA Isaac Sim</span>
+          <span class="skill-tag">Gazebo / Isaac Sim</span>
           <span class="skill-tag">MAVROS</span>
-          <span class="skill-tag">ros2_control</span>
+          <span class="skill-tag">Waypoint Navigation</span>
+          <span class="skill-tag">Mobile Robotics</span>
         </div>
       </div>
 
       <div class="skill-category">
-        <h3>Programming & Languages</h3>
+        <h3>📡 State Estimation</h3>
         <div class="skill-tags">
-          <span class="skill-tag">C++</span>
-          <span class="skill-tag">Python</span>
-          <span class="skill-tag">MATLAB/Simulink</span>
-          <span class="skill-tag">Git</span>
-          <span class="skill-tag">Linux</span>
-          <span class="skill-tag">Docker</span>
-          <span class="skill-tag">Bash</span>
+          <span class="skill-tag">Extended Kalman Filters</span>
+          <span class="skill-tag">GPS Smoothing</span>
+          <span class="skill-tag">IMU/Accel/Mag Fusion</span>
+          <span class="skill-tag">GPS-Denied Navigation</span>
         </div>
       </div>
 
       <div class="skill-category">
-        <h3>Hardware & Platforms</h3>
+        <h3>🏭 Industrial Automation</h3>
         <div class="skill-tags">
-          <span class="skill-tag">UR5/UR5e Manipulators</span>
           <span class="skill-tag">Allen-Bradley PLCs</span>
-          <span class="skill-tag">NVIDIA Jetson</span>
-          <span class="skill-tag">Pixhawk Flight Controllers</span>
-          <span class="skill-tag">VFD Systems</span>
-          <span class="skill-tag">Embedded Real-Time Systems</span>
+          <span class="skill-tag">Safety Interlocks</span>
+          <span class="skill-tag">VFD Motor Control</span>
+          <span class="skill-tag">Embedded Real-Time</span>
         </div>
       </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="skills-section">
+  <div class="container">
+    <h2>Languages & Tools</h2>
+    <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:2rem; padding:2rem 0;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+        <i class="devicon-cplusplus-plain" style="font-size:2.8rem;"></i>
+        <span style="font-size:0.8rem;">C++</span>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+        <i class="devicon-python-plain" style="font-size:2.8rem;"></i>
+        <span style="font-size:0.8rem;">Python</span>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+        <i class="devicon-matlab-plain" style="font-size:2.8rem;"></i>
+        <span style="font-size:0.8rem;">MATLAB</span>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+        <i class="devicon-pytorch-original" style="font-size:2.8rem;"></i>
+        <span style="font-size:0.8rem;">PyTorch</span>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+        <i class="devicon-opencv-plain" style="font-size:2.8rem;"></i>
+        <span style="font-size:0.8rem;">OpenCV</span>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+        <i class="devicon-linux-plain" style="font-size:2.8rem;"></i>
+        <span style="font-size:0.8rem;">Linux</span>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+        <i class="devicon-git-plain" style="font-size:2.8rem;"></i>
+        <span style="font-size:0.8rem;">Git</span>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+        <i class="devicon-docker-plain" style="font-size:2.8rem;"></i>
+        <span style="font-size:0.8rem;">Docker</span>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+        <i class="devicon-cmake-plain" style="font-size:2.8rem;"></i>
+        <span style="font-size:0.8rem;">CMake</span>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+        <i class="devicon-bash-plain" style="font-size:2.8rem;"></i>
+        <span style="font-size:0.8rem;">Bash</span>
+      </div>
+    </div>
+    <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:0.8rem; padding:0 0 1.5rem 0;">
+      <span class="skill-tag">ROS 2</span>
+      <span class="skill-tag">Gazebo</span>
+      <span class="skill-tag">Isaac Sim</span>
+      <span class="skill-tag">MAVROS</span>
+      <span class="skill-tag">ros2_control</span>
+      <span class="skill-tag">Simulink</span>
+      <span class="skill-tag">KDL</span>
+      <span class="skill-tag">Eigen</span>
+      <span class="skill-tag">LaTeX</span>
     </div>
   </div>
 </div>
@@ -126,13 +195,7 @@ title: Home
     </div>
 
     <div class="showcase-actions">
-      <a href="/projects/" class="btn-primary">View All Projects</a>
+      <a href="{{ '/projects/' | relative_url }}" class="btn-primary">View All Projects</a>
     </div>
   </div>
 </div>
-
-<footer class="site-footer">
-  <div class="container">
-    <p>© {{ 'now' | date: "%Y" }} Oluwaseyi R. Afolayan. Built with Jekyll.</p>
-  </div>
-</footer>
