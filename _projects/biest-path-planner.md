@@ -2,6 +2,7 @@
 layout: project
 title: "Bidirectional EST Path Planner for UR5"
 description: "Custom Bidirectional Expansive Space Tree (BiEST) motion planner integrated with MoveIt 2 for collision-free trajectory generation on the UR5 manipulator. Combines weighted roulette-wheel sampling, goal-biased exploration, and iterative backtracking across dual trees. Tested in RViz, Gazebo, Isaac Sim, and on physical hardware."
+status: completed
 date: 2024-12-01
 categories: [Motion Planning, C++, ROS2, MoveIt, Manipulation]
 featured_image: "https://github.com/Seyi-roboticist/OluwaseyiR.github.io/assets/143431845/cdd1d19e-3765-42c3-9cce-d4a27d502e23"
