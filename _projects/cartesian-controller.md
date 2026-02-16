@@ -2,6 +2,7 @@
 layout: project
 title: "Real-Time Cartesian Controller for UR5/UR5e"
 description: "A three-package ROS 2 control framework for real-time end-effector positioning. SVD-based damped pseudo-inverse Jacobian with PID feedback achieving ±0.7mm accuracy at 500Hz on Universal Robots hardware."
+status: completed
 date: 2025-10-01
 categories: [Manipulation, Controls, Xacro, ROS2, C++, Python]
 featured_image: "/assets/images/projects/cartesian-controller/ur5_control.gif"
