@@ -4,7 +4,7 @@ title: "Aurelia X4 UAV: Full-Stack Drone Autonomy"
 description: "Led a team of five to build a complete ROS 2 control system for the Aurelia X4 heavy-lift quadcopter. Full sim-to-real pipeline spanning URDF modeling, Gazebo Fortress simulation, ArduPilot SITL, MAVROS flight control, and ArUco-based precision landing with a Sony RX0 II camera. FAA-certified Remote PIC. First team to deliver a working implementation after multiple prior cohorts failed."
 date: 2025-05-01
 categories: [UAV, ROS2, Autonomy, MAVROS, Computer Vision, ArduPilot]
-featured_image: "/assets/images/projects/aurelia/aurelia-x4-hardware.png"
+featured_image: "/assets/images/projects/aurelia/test_arms.gif"
 github_url: "https://github.com/Seyi-roboticist/drone_original"
 
 code_files:
@@ -313,7 +313,27 @@ The resulting pose is published as a `PoseStamped` message on `/aruco/pose`, whi
 
 Getting from simulation to real flight involved more than just changing a launch parameter. I had to diagnose and repair hardware damage from previous semesters, recalibrate the Cube Orange's sensors (accelerometer, compass, GPS), verify motor spin directions, and perform multiple ground tests before we were cleared for flight. As the FAA-certified Remote Pilot-in-Command (Part 107), I was responsible for all flight safety decisions, airspace compliance, and go/no-go calls.
 
-We successfully demonstrated takeoff, stable hover, waypoint navigation, and landing on the physical Aurelia X4. The transition from simulation was smooth because the ArduPilot SITL and real Cube Orange run the same firmware, and our ROS 2 stack was designed from the start to be hardware-agnostic.
+We tested in both daylight and nighttime conditions. The nighttime flights were particularly important because they stress-tested our GPS lock stability and our ability to maintain situational awareness without visual line-of-sight cues.
+
+### The Crash
+
+I'm including this because robotics includes failure, and the failures are where you learn the most.
+
+During one of our night tests, I ran a MAVROS script to command a takeoff-and-waypoint sequence through ROS 2. The drone armed, lifted off, and started executing the commanded trajectory. Then we lost communication. The MAVLink heartbeat dropped, and the MAVROS node could no longer send velocity or mode commands to the Cube Orange.
+
+I immediately grabbed the RC transmitter and tried to override to LOITER mode manually. I got the mode switch through, but by that point the drone had already picked up lateral velocity with no active correction, and there wasn't enough altitude to recover. It came down hard.
+
+<div style="max-width: 400px; margin: 1.5rem 0;">
+
+[![Aurelia X4 Night Flight Test](https://img.youtube.com/vi/ft24ixGnmKI/maxresdefault.jpg)](https://www.youtube.com/shorts/ft24ixGnmKI)
+
+*Click to watch: Night flight test captured on my phone. You can hear the motors spin up, see the ROS 2 script execute, and then watch the communication loss unfold in real time.*
+
+</div>
+
+Nobody was hurt and the airframe damage was repairable, but the experience changed how I approached the rest of the project. We traced the root cause to a telemetry radio interference issue at the specific test location, and after that I implemented three changes: a stricter pre-flight communication link check with minimum signal strength thresholds, a shorter failsafe RTL (return-to-launch) timeout so the Cube Orange would react faster to heartbeat loss, and a mandatory minimum altitude of 5 meters before any scripted waypoint commands could execute. Those changes made every subsequent flight safer.
+
+The other test videos from our successful daytime flights are on a teammate's machine and I haven't been able to recover them. But this one tells a more honest story anyway. The successful flights proved the system worked. The crash proved I could diagnose failure modes, implement fixes under pressure, and make the system more robust because of it.
 
 ## Results
 
@@ -321,11 +341,13 @@ We successfully demonstrated takeoff, stable hover, waypoint navigation, and lan
 |---|---|
 | First team to achieve stable flight on this platform | Achieved |
 | Built complete ROS 2 stack from zero (no prior support) | Achieved |
-| URDF model derived from mechanical specs and physical measurements | Achieved |
+| URDF model derived from mechanical specs and SolidWorks analysis | Achieved |
 | Sim-to-real with same codebase | Achieved |
 | MAVROS takeoff, hover, waypoint, land | Achieved (sim + real) |
 | ArUco detection and 6DOF pose estimation | Achieved |
 | Gazebo Fortress + ArduPilot SITL integration | Achieved |
+| Tested in daylight and nighttime conditions | Achieved |
+| Crash root cause identified, failsafes improved | Achieved |
 | FAA Part 107 compliance for all flights | Maintained |
 
 ## Team
