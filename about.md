@@ -292,7 +292,7 @@ permalink: /about/
         </div>
         <div class="now-details">
           <h3>Controls Engineer at The RDI Group</h3>
-          <p>Currently designing control system architectures for industrial automation: Allen-Bradley PLC programming, safety-critical sequencing, and validation protocols for production systems across manufacturing verticals. Valuable work, but only a fraction of what I can do.</p>
+          <p>Currently designing control system architectures for industrial automation: Allen-Bradley PLC programming, safety-critical sequencing, and validation protocols for production systems across manufacturing verticals. </p>
           <span class="now-tag">Current Role</span>
         </div>
       </div>
