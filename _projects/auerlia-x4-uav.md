@@ -321,15 +321,12 @@ I'm including this because robotics includes failure, and the failures are where
 
 During one of our night tests, I ran a MAVROS script to command a takeoff-and-waypoint sequence through ROS 2. The drone armed, lifted off, and started executing the commanded trajectory. Then we lost communication. The MAVLink heartbeat dropped, and the MAVROS node could no longer send velocity or mode commands to the Cube Orange.
 
-I immediately grabbed the RC transmitter and tried to override to LOITER mode manually. I got the mode switch through, but by that point the drone had already picked up lateral velocity with no active correction, and there wasn't enough altitude to recover. It came down hard.
+I was already holding the RC transmitter, which is standard procedure for any scripted flight. As PIC, I always keep the transmitter in hand so I can override instantly if something goes wrong. I switched to LOITER mode manually, but by that point the drone had already picked up lateral velocity with no active correction, and there wasn't enough altitude to recover. It came down hard.
 
-<div style="max-width: 400px; margin: 1.5rem 0;">
-
-[![Aurelia X4 Night Flight Test](https://img.youtube.com/vi/ft24ixGnmKI/maxresdefault.jpg)](https://www.youtube.com/shorts/ft24ixGnmKI)
-
-*Click to watch: Night flight test captured on my phone. You can hear the motors spin up, see the ROS 2 script execute, and then watch the communication loss unfold in real time.*
-
-</div>
+<a href="https://www.youtube.com/shorts/ft24ixGnmKI" target="_blank">
+  <img src="https://img.youtube.com/vi/ft24ixGnmKI/maxresdefault.jpg" alt="Aurelia X4 Night Flight Test" style="max-width: 400px; width: 100%; border-radius: 8px; margin: 1rem 0;">
+</a>
+<p><em>Click to watch: Night flight test captured on my phone. You can hear the motors spin up, see the ROS 2 script execute, and then watch the communication loss unfold in real time.</em></p>
 
 Nobody was hurt and the airframe damage was repairable, but the experience changed how I approached the rest of the project. We traced the root cause to a telemetry radio interference issue at the specific test location, and after that I implemented three changes: a stricter pre-flight communication link check with minimum signal strength thresholds, a shorter failsafe RTL (return-to-launch) timeout so the Cube Orange would react faster to heartbeat loss, and a mandatory minimum altitude of 5 meters before any scripted waypoint commands could execute. Those changes made every subsequent flight safer.
 
