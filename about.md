@@ -281,7 +281,7 @@ permalink: /about/
 <div class="about-hero">
   <div class="container">
     <h1>About Me</h1>
-    <p class="about-intro">I am a roboticist by training with an M.S.E. in Robotics from Johns Hopkins University, where I was an LCSR Distinguished Scholar on full fellowship, and a B.Sc. in Mechatronics, graduating first in my class, Summa Cum Laude. My training and experience focus on building robotic systems end to end, from mathematical modeling and control design to real-time C++ and Python implementation and validation on real hardware. I care deeply about correctness, stability, and execution in the real world.</p>
+    <p class="about-intro">I am a roboticist by training with an M.S.E. in Robotics from Johns Hopkins University, where I was an LCSR Distinguished Scholar on full-tuition fellowship, and a B.Sc. in Mechatronics, graduating first in my class, Summa Cum Laude. My training and experience focus on building robotic systems end to end, from mathematical modeling and control design to real-time C++ and Python implementation and validation on real hardware. I care deeply about correctness, stability, and execution in the real world.</p>
 
 
     <!-- Current Role -->
