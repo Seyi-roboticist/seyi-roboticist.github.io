@@ -2,6 +2,7 @@
 layout: project
 title: "Aurelia X4 UAV: Full-Stack Drone Autonomy"
 description: "Led a team of five to build a complete ROS 2 control system for the Aurelia X4 heavy-lift quadcopter. Full sim-to-real pipeline spanning URDF modeling, Gazebo Fortress simulation, ArduPilot SITL, MAVROS flight control, and ArUco-based precision landing with a Sony RX0 II camera. FAA-certified Remote PIC. First team to deliver a working implementation after multiple prior cohorts failed."
+status: completed
 date: 2025-05-01
 categories: [UAV, ROS2, Autonomy, MAVROS, Computer Vision, ArduPilot]
 featured_image: "/assets/images/projects/aurelia/test_arms.gif"
