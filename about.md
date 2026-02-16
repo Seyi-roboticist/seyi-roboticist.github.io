@@ -304,7 +304,7 @@ permalink: /about/
         <span class="pulse"></span>
         Open to Opportunities
       </div>
-      <p class="opportunity-text">My current role uses a small slice of what I bring to the table. I am a trained roboticist with deep, proven expertise in <strong>robotic manipulation</strong>, <strong>flight controls and GNC</strong>, <strong>motion planning</strong>, <strong>real-time control systems</strong>, <strong>state estimation</strong>, and <strong>perception</strong>. I am actively seeking roles in the robotics industry where the full depth of my skills can be put to work: designing control architectures, building sensor fusion pipelines, deploying autonomous systems, and shipping robots that perform in the real world. If your team is solving hard problems in robotics, I would love to hear from you.</p>
+      <p class="opportunity-text">I am a trained roboticist with deep, proven expertise in <strong>robotic manipulation</strong>, <strong>flight controls and GNC</strong>, <strong>motion planning</strong>, <strong>real-time control systems</strong>, <strong>state estimation</strong>, and <strong>perception</strong>. I am actively seeking roles in the robotics industry where the full depth of my skills can be put to work: designing control architectures, building sensor fusion pipelines, deploying autonomous systems, and shipping robots that perform in the real world. If your team is solving hard problems in robotics, I would love to hear from you.</p>
     </div>
   </div>
 </div>
