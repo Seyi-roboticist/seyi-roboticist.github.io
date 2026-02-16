@@ -2,6 +2,7 @@
 layout: project
 title: "UR5 Place-and-Draw: Three Control Schemes + Batman"
 description: "Team project comparing inverse kinematics, resolved-rate differential kinematics, and Jacobian transpose control for precision end-effector trajectory following on the UR5. I wrote the IK controller and, for extra credit, used parametric equations to trace the Batman symbol on the physical robot."
+status: completed
 date: 2024-04-03
 categories: [Manipulation, Controls, Kinematics, MATLAB, ROS]
 featured_image: "https://github.com/Seyi-roboticist/OluwaseyiR.github.io/assets/143431845/c90ffc7d-1856-41c0-b7ab-4463ea19785c"
