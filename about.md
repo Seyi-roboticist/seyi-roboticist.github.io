@@ -281,8 +281,8 @@ permalink: /about/
 <div class="about-hero">
   <div class="container">
     <h1>About Me</h1>
-    <p class="about-intro">I am a roboticist by training. That is the foundation everything else is built on. With an M.S.E. in Robotics from Johns Hopkins (LCSR Distinguished Scholar, full fellowship) and a B.Sc. in Mechatronics (Summa Cum Laude, first in class), I have spent years building systems that manipulate, navigate, and fly across the full robotics stack: control theory, motion planning, perception, state estimation, and real-time autonomy.</p>
-    <p class="about-intro">I have designed real-time Cartesian controllers achieving sub-millimeter accuracy on UR5e hardware. I have built autopilots for quadrotor and fixed-wing UAVs from first principles using successive loop closure. I have implemented whole-body QP controllers for mobile manipulation on a Husky+UR5 platform. I have written a from-scratch autograd engine and trained a simple neural network classifier using only my own backpropagation code. Every project goes from mathematical derivation through C++/Python implementation to validated hardware execution.</p>
+    <p class="about-intro">I am a roboticist by training with an M.S.E. in Robotics from Johns Hopkins University, where I was an LCSR Distinguished Scholar on full fellowship, and a B.Sc. in Mechatronics, graduating first in my class, Summa Cum Laude. My training and experience focus on building robotic systems end to end, from mathematical modeling and control design to real-time C++ and Python implementation and validation on real hardware. I care deeply about correctness, stability, and execution in the real world.</p>
+
 
     <!-- Current Role -->
     <div class="now-section">
