@@ -112,7 +112,7 @@ title: Home
     <div class="hero-content">
       <div class="hero-layout">
         <div class="hero-photo-wrapper">
-          <img src="{{ '/assets/images/profile.png' | relative_url }}" alt="Seyi R. Afolayan" class="hero-photo">
+          <img src="{{ '/assets/images/seyi.png' | relative_url }}" alt="Seyi R. Afolayan" class="hero-photo">
         </div>
         <div class="hero-info-wrapper" style="flex-direction: column; align-items: flex-start;">
           <div class="hero-text">
