@@ -2,6 +2,7 @@
 layout: project
 title: "Autograd Engine & Neural Network Classifier"
 description: "A from-scratch implementation of automatic differentiation and backpropagation, the core engine behind modern deep learning. Includes a scalar-valued autograd engine, linear layer, softmax cross-entropy loss, and a gradient descent training loop that achieves 99% accuracy on a 4-class 2D classification task."
+status: completed
 date: 2024-10-15
 categories: [Machine Learning, Deep Learning, Python]
 featured_image: "/assets/images/projects/autograd-engine/comp_graph.png"
