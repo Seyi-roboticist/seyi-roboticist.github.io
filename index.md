@@ -112,7 +112,7 @@ title: Home
     <div class="hero-content">
       <div class="hero-layout">
         <div class="hero-photo-wrapper">
-          <img src="{{ '/assets/images/seyi.png' | relative_url }}" alt="Seyi R. Afolayan" class="hero-photo">
+          <img src="{{ '/assets/images/profile.png' | relative_url }}" alt="Seyi R. Afolayan" class="hero-photo">
         </div>
         <div class="hero-info-wrapper" style="flex-direction: column; align-items: flex-start;">
           <div class="hero-text">
@@ -292,7 +292,8 @@ title: Home
     </div>
 
     <div class="projects-grid-featured">
-      {% for project in site.projects limit: 6 %}
+      {% assign completed = site.projects | where: "status", "completed" | sort: "date" | reverse %}
+      {% for project in completed limit: 6 %}
         <div class="project-card-featured">
           <div class="project-media">
             {% if project.featured_image %}
