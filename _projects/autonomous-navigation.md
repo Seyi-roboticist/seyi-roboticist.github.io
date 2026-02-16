@@ -2,6 +2,7 @@
 layout: project
 title: "Autonomous Navigation Robot"
 description: "Multi-sensor autonomous mobile robot with finite state machine architecture. Fuses Pixy2 vision, IR proximity, ultrasonic ranging, and quadrature encoders for obstacle avoidance and cue-based navigation on a custom differential-drive platform."
+status: completed
 date: 2023-06-01
 categories: [Autonomy, Embedded, Navigation, C++, Arduino]
 featured_image: "https://github.com/Seyi-roboticist/OluwaseyiR.github.io/assets/143431845/e2be8889-235b-4072-83e4-30efd551662b"
