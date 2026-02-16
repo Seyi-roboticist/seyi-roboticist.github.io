@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
 
 <style>
   /* ── Hero ── */
@@ -15,28 +15,29 @@ permalink: /about/
   }
   .about-hero h1 {
     color: var(--text-primary);
-    font-size: var(--font-size-3xl);
-    letter-spacing: -0.02em;
-    margin-bottom: 1.5rem;
+    font-size: clamp(2.6rem, 6vw, 3.8rem);
+    letter-spacing: -0.03em;
+    margin-bottom: 1.8rem;
+    font-weight: 800;
   }
   .about-intro {
     color: var(--text-secondary);
-    font-size: 1.1rem;
+    font-size: clamp(1.15rem, 2.5vw, 1.35rem);
     line-height: 1.85;
-    max-width: 720px;
-    margin: 0 auto 1rem;
+    max-width: 760px;
+    margin: 0 auto 1.2rem;
     font-weight: 300;
   }
 
   /* ── Open to Opportunities Banner ── */
   .opportunity-banner {
     position: relative;
-    max-width: 720px;
+    max-width: 760px;
     margin: 2.5rem auto 0;
-    padding: 1.6rem 2rem;
-    background: linear-gradient(135deg, rgba(99,102,241,0.06) 0%, rgba(52,211,153,0.06) 100%);
-    border: 1px solid rgba(99,102,241,0.2);
-    border-radius: 12px;
+    padding: 2.4rem 2.6rem;
+    background: linear-gradient(135deg, rgba(99,102,241,0.07) 0%, rgba(52,211,153,0.07) 100%);
+    border: 1px solid rgba(99,102,241,0.25);
+    border-radius: 14px;
     overflow: hidden;
   }
   .opportunity-banner::before {
@@ -44,88 +45,50 @@ permalink: /about/
     position: absolute;
     top: 0;
     left: 0;
-    width: 4px;
+    width: 5px;
     height: 100%;
     background: linear-gradient(180deg, var(--primary-color, #6366f1), #34d399);
-    border-radius: 4px 0 0 4px;
+    border-radius: 5px 0 0 5px;
   }
   .opportunity-badge {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 4px 14px;
+    gap: 9px;
+    padding: 8px 22px;
     background: linear-gradient(135deg, var(--primary-color, #6366f1), #34d399);
     color: #fff;
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     border-radius: 20px;
-    margin-bottom: 0.8rem;
+    margin-bottom: 1.2rem;
   }
   .opportunity-badge .pulse {
-    width: 7px;
-    height: 7px;
+    width: 8px;
+    height: 8px;
     background: #fff;
     border-radius: 50%;
     animation: pulse-opp 2s ease-in-out infinite;
   }
   @keyframes pulse-opp {
     0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,255,255,0.5); }
-    50% { opacity: 0.6; box-shadow: 0 0 0 5px rgba(255,255,255,0); }
+    50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(255,255,255,0); }
   }
   .opportunity-text {
     color: var(--text-primary);
-    font-size: 0.95rem;
-    line-height: 1.7;
+    font-size: clamp(1.05rem, 2.2vw, 1.22rem);
+    line-height: 1.8;
     margin: 0;
     font-weight: 400;
   }
   .opportunity-text strong {
     color: var(--accent-color, var(--primary-color));
   }
-  .opportunity-links {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-    flex-wrap: wrap;
-  }
-  .opportunity-links a {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 16px;
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    text-decoration: none;
-    border-radius: 6px;
-    transition: all 0.25s ease;
-  }
-  .opp-link-primary {
-    background: var(--primary-color, #6366f1);
-    color: #fff;
-  }
-  .opp-link-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(99,102,241,0.35);
-    filter: brightness(1.1);
-    color: #fff;
-  }
-  .opp-link-secondary {
-    background: transparent;
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
-  }
-  .opp-link-secondary:hover {
-    background: var(--surface-color);
-    border-color: var(--text-primary);
-  }
 
   /* ── Now Section ── */
   .now-section {
-    max-width: 720px;
+    max-width: 760px;
     margin: 2.5rem auto 0;
   }
   .now-card {
@@ -181,10 +144,11 @@ permalink: /about/
   /* ── Body ── */
   .about-body h2 {
     color: var(--text-primary);
-    font-size: var(--font-size-2xl);
+    font-size: clamp(1.6rem, 3.5vw, 2rem);
     letter-spacing: -0.01em;
     margin-top: 3rem;
     margin-bottom: 1.5rem;
+    font-weight: 700;
   }
   .about-divider {
     border: none;
@@ -309,8 +273,7 @@ permalink: /about/
 
   /* ── Responsive ── */
   @media (max-width: 768px) {
-    .opportunity-banner { padding: 1.2rem 1.4rem; }
-    .opportunity-links { flex-direction: column; }
+    .opportunity-banner { padding: 1.4rem 1.4rem; }
     .now-card { flex-direction: column; text-align: center; align-items: center; }
   }
 </style>
@@ -318,8 +281,8 @@ permalink: /about/
 <div class="about-hero">
   <div class="container">
     <h1>About Me</h1>
-    <p class="about-intro">I am a roboticist. That is the core of who I am and what I have trained to become. With an M.S.E. in Robotics from Johns Hopkins and years of building systems that manipulate, navigate, and fly, I have developed deep expertise across the full robotics stack: control theory, motion planning, perception, state estimation, and real-time autonomy.</p>
-    <p class="about-intro">I design robot arms that track at sub-millimeter accuracy at 500Hz. I build autopilots for UAVs from first principles. I write whole-body QP controllers for mobile manipulators. I implement autograd engines and neural networks from scratch. Every project I take on goes from mathematical foundations through C++/Python implementation to hardware validation.</p>
+    <p class="about-intro">I am a roboticist by training. That is the foundation everything else is built on. With an M.S.E. in Robotics from Johns Hopkins (LCSR Distinguished Scholar, full fellowship) and a B.Sc. in Mechatronics (Summa Cum Laude, first in class), I have spent years building systems that manipulate, navigate, and fly across the full robotics stack: control theory, motion planning, perception, state estimation, and real-time autonomy.</p>
+    <p class="about-intro">I have designed real-time Cartesian controllers achieving sub-millimeter accuracy on UR5e hardware. I have built autopilots for quadrotor and fixed-wing UAVs from first principles using successive loop closure. I have implemented whole-body QP controllers for mobile manipulation on a Husky+UR5 platform. I have written a from-scratch autograd engine and trained a simple neural network classifier using only my own backpropagation code. Every project goes from mathematical derivation through C++/Python implementation to validated hardware execution.</p>
 
     <!-- Current Role -->
     <div class="now-section">
@@ -329,7 +292,7 @@ permalink: /about/
         </div>
         <div class="now-details">
           <h3>Controls Engineer at The RDI Group</h3>
-          <p>Currently working in industrial automation: PLC programming, safety-critical interlocks, VFD motor control, and deterministic sequencing for continuous production across roofing, telecom, and datacenter industries. Valuable work, but only a fraction of what I can do.</p>
+          <p>Currently designing control system architectures for industrial automation: Allen-Bradley PLC programming, safety-critical sequencing, and validation protocols for production systems across manufacturing verticals. Valuable work, but only a fraction of what I can do.</p>
           <span class="now-tag">Current Role</span>
         </div>
       </div>
@@ -341,18 +304,7 @@ permalink: /about/
         <span class="pulse"></span>
         Open to Opportunities
       </div>
-      <p class="opportunity-text">My current role uses a small slice of what I bring to the table. I am a trained roboticist with deep, proven expertise in <strong>robotic manipulation</strong>, <strong>flight controls and GNC</strong>, <strong>motion planning</strong>, <strong>perception</strong>, and <strong>real-time autonomy</strong>. I am actively seeking roles in the robotics industry where the full depth of my skills can be put to work: designing control architectures, building perception pipelines, deploying autonomous systems, and shipping robots that perform in the real world. If your team is solving hard problems in robotics, I would love to talk.</p>
-      <div class="opportunity-links">
-        <a href="mailto:seyirafolayan@gmail.com" class="opp-link-primary">
-          <i class="fas fa-envelope"></i> Get in Touch
-        </a>
-        <a href="https://linkedin.com/in/oluwaseyi-r-afolayan-4b8330206" target="_blank" class="opp-link-secondary">
-          <i class="fab fa-linkedin"></i> LinkedIn
-        </a>
-        <a href="https://github.com/Seyi-roboticist" target="_blank" class="opp-link-secondary">
-          <i class="fab fa-github"></i> GitHub
-        </a>
-      </div>
+      <p class="opportunity-text">My current role uses a small slice of what I bring to the table. I am a trained roboticist with deep, proven expertise in <strong>robotic manipulation</strong>, <strong>flight controls and GNC</strong>, <strong>motion planning</strong>, <strong>real-time control systems</strong>, <strong>state estimation</strong>, and <strong>perception</strong>. I am actively seeking roles in the robotics industry where the full depth of my skills can be put to work: designing control architectures, building sensor fusion pipelines, deploying autonomous systems, and shipping robots that perform in the real world. If your team is solving hard problems in robotics, I would love to hear from you.</p>
     </div>
   </div>
 </div>
@@ -364,10 +316,10 @@ permalink: /about/
 <div class="skills-grid">
   <div class="skill-category">
     <h3>Robotic Manipulation</h3>
-    <p>This is where I started and what I keep coming back to. Real-time Cartesian control on UR5/UR5e platforms with singularity-robust inverse kinematics, 500Hz servo loops, and sub-millimeter tracking. Currently designing a custom robot arm from scratch: mechanical design, electronics, and full ROS 2 integration.</p>
+    <p>This is where I started and what I keep coming back to. Real-time Cartesian control on UR5/UR5e platforms with singularity-robust inverse kinematics and sub-millimeter tracking accuracy. Currently designing a custom robot arm from scratch: mechanical design, electronics, and full ROS 2 integration.</p>
     <div class="skill-tags">
       <span class="skill-tag">Jacobian IK (SVD + Tikhonov)</span>
-      <span class="skill-tag">500Hz Control Loops</span>
+      <span class="skill-tag">Real-Time Control Loops</span>
       <span class="skill-tag">+/-0.7mm Accuracy</span>
       <span class="skill-tag">ros2_control</span>
       <span class="skill-tag">UR5/UR5e</span>
@@ -377,7 +329,7 @@ permalink: /about/
 
   <div class="skill-category">
     <h3>Flight Controls & GNC</h3>
-    <p>Full autopilot design from first principles: 6DOF modeling, trim analysis, linearization, and successive loop closure for both fixed-wing and rotary-wing UAVs. Dual EKF state estimation with GPS smoothing. Dual FAA and Transport Canada certified remote pilot.</p>
+    <p>Full autopilot design from first principles: 6DOF modeling, trim analysis, linearization, and successive loop closure for both fixed-wing and rotary-wing UAVs. Dual EKF state estimation with GPS smoothing using Gauss-Markov error models. Dual FAA Part 107 and Transport Canada certified remote pilot.</p>
     <div class="skill-tags">
       <span class="skill-tag">6DOF Modeling</span>
       <span class="skill-tag">Successive Loop Closure</span>
@@ -390,7 +342,7 @@ permalink: /about/
 
   <div class="skill-category">
     <h3>Mobile Robotics</h3>
-    <p>Autonomous mobile robots that navigate, plan, and interact. Built JHockey, an autonomous mobile robot for a robotics hockey competition at Hopkins. Whole-body coordination for mobile manipulation using quadratic programming.</p>
+    <p>Autonomous mobile robots that navigate, plan, and interact. Built JHockey, an autonomous mobile robot for a robotics hockey competition at Hopkins. Whole-body coordination for mobile manipulation using quadratic programming on a Husky+UR5 platform.</p>
     <div class="skill-tags">
       <span class="skill-tag">Autonomous Navigation</span>
       <span class="skill-tag">Motion Planning</span>
@@ -402,19 +354,19 @@ permalink: /about/
 
   <div class="skill-category">
     <h3>Perception & Machine Learning</h3>
-    <p>Computer vision, deep learning, and 3D reconstruction. Implemented Neural Radiance Fields (NeRF) for novel view synthesis. Experience with machine perception pipelines, sim-to-real transfer, and vision-based autonomy.</p>
+    <p>Computer vision, deep learning, and 3D reconstruction. Implemented Neural Radiance Fields (NeRF) for novel view synthesis. Built a from-scratch autograd engine and trained a neural network classifier using my own backpropagation code. Experience with sim-to-real transfer and vision-based autonomy.</p>
     <div class="skill-tags">
       <span class="skill-tag">Computer Vision (OpenCV)</span>
       <span class="skill-tag">Deep Learning</span>
       <span class="skill-tag">NeRF</span>
-      <span class="skill-tag">Machine Perception</span>
+      <span class="skill-tag">Autograd Engine</span>
       <span class="skill-tag">Sim-to-Real Transfer</span>
     </div>
   </div>
 
   <div class="skill-category">
     <h3>State Estimation & Sensor Fusion</h3>
-    <p>Turning noisy sensor data into reliable state estimates. EKF design for attitude estimation, GPS smoothing with Gauss-Markov error models, and multi-sensor fusion for navigation in GPS-denied environments including underwater.</p>
+    <p>Turning noisy sensor data into reliable state estimates. Dual EKF design: attitude estimation from gyro and accelerometer data, and GPS smoothing with Gauss-Markov error models. Multi-sensor fusion for navigation in GPS-denied environments including underwater vehicles.</p>
     <div class="skill-tags">
       <span class="skill-tag">Extended Kalman Filters</span>
       <span class="skill-tag">GPS Smoothing</span>
@@ -425,12 +377,12 @@ permalink: /about/
 
   <div class="skill-category">
     <h3>Industrial Automation</h3>
-    <p>Safety-critical control systems for 24/7 production environments. PLC programming, fault-tolerant interlocks, motor control, and deterministic sequencing for manufacturing lines across roofing, telecom, and datacenter industries.</p>
+    <p>Safety-critical control systems for production environments. Allen-Bradley PLC programming, fault-tolerant interlocks, VFD motor control, and deterministic sequencing. Built computer vision and LLM-based tools to extract engineering data from electrical schematics, reducing manual documentation effort by 80%.</p>
     <div class="skill-tags">
       <span class="skill-tag">Allen-Bradley PLCs</span>
       <span class="skill-tag">Safety Interlocks</span>
       <span class="skill-tag">VFD Motor Control</span>
-      <span class="skill-tag">Continuous Production</span>
+      <span class="skill-tag">Ladder Logic</span>
     </div>
   </div>
 </div>
@@ -441,16 +393,28 @@ permalink: /about/
 
 <div class="timeline">
   <div class="timeline-item">
-    <div class="timeline-period">2025 - Present</div>
+    <div class="timeline-period">Sep 2025 - Present</div>
     <div class="timeline-role">Controls Engineer</div>
-    <div class="timeline-org">The RDI Group</div>
-    <div class="timeline-desc">Industrial automation: PLC programming, VFD motor control, safety interlocks, and deterministic sequencing across roofing, telecom, and datacenter verticals. Solid controls work, but my robotics training runs much deeper.</div>
+    <div class="timeline-org">The RDI Group, Itasca, IL</div>
+    <div class="timeline-desc">Designing control system architectures for industrial automation. Implementing control logic and I/O interfaces for Allen-Bradley PLCs. Developing safety-critical control sequences with deterministic real-time response requirements. Building automation tools using computer vision and LLMs to extract engineering data from electrical schematics.</div>
   </div>
   <div class="timeline-item">
-    <div class="timeline-period">2023 - 2025</div>
-    <div class="timeline-role">Graduate Research & Teaching Assistant</div>
-    <div class="timeline-org">Johns Hopkins University, LCSR</div>
-    <div class="timeline-desc">TA for Algorithms for Sensor-Based Robotics (82+ students), Design & Analysis of Dynamic Systems, and Robot Sensors and Actuators. Research in real-time Cartesian control, motion planning, and autonomous UAV systems.</div>
+    <div class="timeline-period">Dec 2023 - Aug 2024</div>
+    <div class="timeline-role">Research Engineer, Controls & Underwater Robotics</div>
+    <div class="timeline-org">Dynamical Systems & Control Lab, JHU (Supervisor: Dr. Louis Whitcomb, IEEE Fellow)</div>
+    <div class="timeline-desc">Contributed to the control system development for the JHUROV 2 underwater vehicle autonomy stack. Developed trajectory tracking algorithms for subsea navigation under dynamic constraints. Implemented state estimation and sensor fusion for underwater vehicle localization.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-period">Jun 2024 - Sep 2024</div>
+    <div class="timeline-role">Controls Software Engineer Intern</div>
+    <div class="timeline-org">Johns Hopkins University (Supervisors: Dr. Simon Leonard, Dr. Jin Seob Kim)</div>
+    <div class="timeline-desc">Developed real-time control algorithms with validated simulation-to-hardware deployment pipelines. Built sensor integration and calibration pipelines for control system feedback. Implemented trajectory generation and tracking controllers for manipulator systems.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-period">Apr 2016 - Jul 2019</div>
+    <div class="timeline-role">Aviation Systems Technician & Licensed Remote Pilot</div>
+    <div class="timeline-org">Cargojet, Canada</div>
+    <div class="timeline-desc">System troubleshooting and validation for aviation maintenance operations. Operated UAV systems with focus on flight control and operational safety protocols.</div>
   </div>
 </div>
 
@@ -480,11 +444,11 @@ permalink: /about/
     <span>OpenCV</span>
   </div>
   <div class="tool-icon">
-    <i class="devicon-ros-original"></i>
+    <i class="fas fa-robot" style="font-size:2.8rem; opacity:0.9;"></i>
     <span>ROS 2</span>
   </div>
   <div class="tool-icon">
-    <i class="devicon-gazebo-plain"></i>
+    <i class="fas fa-cube" style="font-size:2.8rem; opacity:0.9;"></i>
     <span>Gazebo</span>
   </div>
   <div class="tool-icon">
@@ -514,16 +478,15 @@ permalink: /about/
 </div>
 
 <div class="extra-tools">
-  <span class="skill-tag">ROS 2</span>
-  <span class="skill-tag">Gazebo</span>
+  <span class="skill-tag">Simulink</span>
   <span class="skill-tag">Isaac Sim</span>
   <span class="skill-tag">MAVROS</span>
   <span class="skill-tag">ros2_control</span>
-  <span class="skill-tag">Simulink</span>
   <span class="skill-tag">KDL</span>
   <span class="skill-tag">Eigen</span>
   <span class="skill-tag">Pixhawk</span>
   <span class="skill-tag">NVIDIA Jetson</span>
+  <span class="skill-tag">Ladder Logic</span>
 </div>
 
 <hr class="about-divider">
@@ -533,18 +496,20 @@ permalink: /about/
 <div class="skills-grid">
   <div class="skill-category">
     <h3>Johns Hopkins University</h3>
-    <p><span class="edu-role">M.S.E. Robotics</span><br><span class="edu-detail">Control, Perception & Autonomy</span></p>
+    <p><span class="edu-role">M.S.E. Robotics</span><br><span class="edu-detail">Control & Perception Track, Aug 2023 - May 2025</span></p>
     <div class="skill-tags">
       <span class="skill-tag">LCSR Distinguished Scholar</span>
+      <span class="skill-tag">Full Fellowship</span>
     </div>
   </div>
 
   <div class="skill-category">
     <h3>University of Prince Edward Island</h3>
-    <p><span class="edu-role">B.Sc. Sustainable Design Engineering</span><br><span class="edu-detail">Mechatronics Concentration</span></p>
+    <p><span class="edu-role">B.Sc. Sustainable Design Engineering</span><br><span class="edu-detail">Mechatronics, Summa Cum Laude, Sep 2019 - Apr 2023</span></p>
     <div class="skill-tags">
       <span class="skill-tag">First in Class</span>
       <span class="skill-tag">Engineers PEI Award</span>
+      <span class="skill-tag">Technical Excellence Award</span>
     </div>
   </div>
 </div>
@@ -556,12 +521,12 @@ permalink: /about/
 <div class="skills-grid">
   <div class="skill-category">
     <h3>FAA Part 107 Remote Pilot</h3>
-    <p><span class="edu-detail">United States</span></p>
+    <p><span class="edu-detail">United States, Jan 2025</span></p>
   </div>
 
   <div class="skill-category">
     <h3>Transport Canada Remote Pilot (Advanced)</h3>
-    <p><span class="edu-detail">Canada</span></p>
+    <p><span class="edu-detail">Canada, Sep 2020</span></p>
   </div>
 </div>
 
@@ -572,7 +537,7 @@ permalink: /about/
 <div class="skills-grid">
   <div class="skill-category">
     <h3>Algorithms for Sensor-Based Robotics</h3>
-    <p><span class="edu-role">EN.601.463/663</span><br><span class="edu-detail">Johns Hopkins University</span></p>
+    <p><span class="edu-role">EN.601.463/663</span><br><span class="edu-detail">Prof. Simon Leonard, JHU, Aug 2024 - May 2025</span></p>
     <div class="skill-tags">
       <span class="skill-tag">82+ Students</span>
       <span class="skill-tag">UR5 Hardware Validation</span>
@@ -582,7 +547,7 @@ permalink: /about/
 
   <div class="skill-category">
     <h3>Design & Analysis of Dynamic Systems</h3>
-    <p><span class="edu-role">EN.530.343</span><br><span class="edu-detail">Johns Hopkins University</span></p>
+    <p><span class="edu-role">EN.530.343</span><br><span class="edu-detail">Prof. Louis Whitcomb, JHU, Dec 2024 - May 2025</span></p>
     <div class="skill-tags">
       <span class="skill-tag">Control Theory</span>
       <span class="skill-tag">Servo Systems</span>
@@ -592,12 +557,35 @@ permalink: /about/
 
   <div class="skill-category">
     <h3>Robot Sensors and Actuators</h3>
-    <p><span class="edu-role">EN.530.430</span><br><span class="edu-detail">Johns Hopkins University</span></p>
+    <p><span class="edu-role">EN.530.430</span><br><span class="edu-detail">Prof. David Kraemer, JHU, Aug 2024 - Dec 2024</span></p>
     <div class="skill-tags">
       <span class="skill-tag">Sensor Calibration</span>
       <span class="skill-tag">Embedded Systems</span>
       <span class="skill-tag">Arduino</span>
     </div>
+  </div>
+</div>
+
+<hr class="about-divider">
+
+<h2>Selected Honors</h2>
+
+<div class="skills-grid">
+  <div class="skill-category">
+    <h3>LCSR Distinguished Scholarship</h3>
+    <p><span class="edu-detail">Johns Hopkins University, full tuition and health insurance fellowship for research excellence in robotics</span></p>
+  </div>
+  <div class="skill-category">
+    <h3>Fung Excellence Award</h3>
+    <p><span class="edu-detail">Coleman Fung Institute, UC Berkeley. Merit-based scholarship at maximum value (Declined)</span></p>
+  </div>
+  <div class="skill-category">
+    <h3>Engineering Undergraduate Research Award</h3>
+    <p><span class="edu-detail">UPEI, NSERC-equivalent research award for international students</span></p>
+  </div>
+  <div class="skill-category">
+    <h3>Mastercard Foundation Scholars Program</h3>
+    <p><span class="edu-detail">UC Berkeley, Finalist (Declined due to J-1 visa restrictions)</span></p>
   </div>
 </div>
 
