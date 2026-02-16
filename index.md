@@ -13,6 +13,45 @@ title: Home
     letter-spacing: 0.05em;
     opacity: 0.85;
   }
+  .hero-layout {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+  }
+  .hero-photo-wrapper {
+    flex-shrink: 0;
+  }
+  .hero-photo {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    border: 3px solid var(--border-color);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .hero-photo:hover {
+    transform: scale(1.03);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+  }
+  @media (max-width: 768px) {
+    .hero-layout {
+      flex-direction: column;
+      text-align: center;
+      gap: 2rem;
+    }
+    .hero-photo {
+      width: 180px;
+      height: 180px;
+    }
+    .hero-info-wrapper {
+      align-items: center !important;
+    }
+    .hero-actions {
+      justify-content: center !important;
+    }
+  }
   .intro-section p {
     font-size: 1.15rem;
     line-height: 1.8;
@@ -71,16 +110,21 @@ title: Home
 <div class="hero-personal">
   <div class="container">
     <div class="hero-content">
-      <div class="hero-info-wrapper">
-        <div class="hero-text">
-          <h1 class="hero-name">Oluwaseyi R. Afolayan</h1>
-          <p class="hero-title">Full-Stack Roboticist</p>
-          <p class="hero-tagline">Manipulation · Flight Controls · Perception · Autonomy · State Estimation</p>
+      <div class="hero-layout">
+        <div class="hero-photo-wrapper">
+          <img src="{{ '/assets/images/profile.png' | relative_url }}" alt="Seyi R. Afolayan" class="hero-photo">
         </div>
+        <div class="hero-info-wrapper" style="flex-direction: column; align-items: flex-start;">
+          <div class="hero-text">
+            <h1 class="hero-name">Oluwaseyi R. Afolayan</h1>
+            <p class="hero-title">Full-Stack Roboticist</p>
+            <p class="hero-tagline">Manipulation · Flight Controls · Perception · Autonomy · State Estimation</p>
+          </div>
 
-        <div class="hero-actions">
-          <a href="{{ '/about/' | relative_url }}" class="btn-primary">About Me</a>
-          <a href="{{ '/projects/' | relative_url }}" class="btn-secondary">View Projects</a>
+          <div class="hero-actions">
+            <a href="{{ '/about/' | relative_url }}" class="btn-primary">About Me</a>
+            <a href="{{ '/projects/' | relative_url }}" class="btn-secondary">View Projects</a>
+          </div>
         </div>
       </div>
     </div>
@@ -89,7 +133,7 @@ title: Home
 
 <div class="intro-section">
   <div class="container">
-    <p>I build robots that manipulate, navigate, and fly. From sub-millimeter arm control at 500Hz to autonomous UAV flight systems to deep learning for 3D reconstruction — I work across the full robotics stack, from dynamics on the whiteboard to machines in the real world.</p>
+    <p>I build robots that manipulate, navigate, and fly. My work spans real-time Cartesian control on industrial manipulators, full-stack drone autonomy with sim-to-real pipelines, and custom motion planners for collision-free operation. Every project here goes from mathematical foundations through implementation to hardware validation.</p>
   </div>
 </div>
 
@@ -97,73 +141,63 @@ title: Home
 
 <div class="skills-section">
   <div class="container">
-    <h2>What I Build</h2>
+    <div class="skills-content">
+      <h2>Core Competencies</h2>
+    </div>
+
     <div class="skills-grid">
-
       <div class="skill-category">
-        <h3>🦾 Robotic Manipulation</h3>
-        <p>Real-time Cartesian control on UR5/UR5e — singularity-robust inverse kinematics at 500Hz with sub-millimeter tracking accuracy.</p>
+        <h3>Robotic Manipulation</h3>
+        <p>Jacobian-based Cartesian control, singularity-robust IK, and real-time servo loops on UR5/UR5e platforms.</p>
         <div class="skill-tags">
-          <span class="skill-tag">Jacobian IK</span>
-          <span class="skill-tag">500Hz Servo Loops</span>
-          <span class="skill-tag">±0.7mm Accuracy</span>
+          <span class="skill-tag">Inverse Kinematics</span>
           <span class="skill-tag">ros2_control</span>
-          <span class="skill-tag">SVD + Tikhonov</span>
+          <span class="skill-tag">500Hz Servo</span>
+          <span class="skill-tag">SVD Damping</span>
         </div>
       </div>
 
       <div class="skill-category">
-        <h3>🛩️ Flight Controls & GNC</h3>
-        <p>Full autopilot design from first principles — 6DOF modeling, successive loop closure, and dual EKF state estimation for fixed-wing and rotary-wing UAVs.</p>
+        <h3>Flight Controls & GNC</h3>
+        <p>6DOF modeling, successive loop closure, dual EKF state estimation, and full autopilot design for fixed-wing and rotary platforms.</p>
         <div class="skill-tags">
-          <span class="skill-tag">6DOF Modeling</span>
-          <span class="skill-tag">Successive Loop Closure</span>
-          <span class="skill-tag">PID/PIR</span>
-          <span class="skill-tag">Stability Margins</span>
-          <span class="skill-tag">EKF Sensor Fusion</span>
+          <span class="skill-tag">ArduPilot</span>
+          <span class="skill-tag">MAVROS</span>
+          <span class="skill-tag">PID Tuning</span>
+          <span class="skill-tag">FAA Part 107</span>
         </div>
       </div>
 
       <div class="skill-category">
-        <h3>👁️ Perception & Deep Learning</h3>
-        <p>Computer vision, neural scene representations, and learned perception pipelines. NeRF for 3D reconstruction and sim-to-real transfer for deployment.</p>
+        <h3>Motion Planning</h3>
+        <p>Sampling-based and optimization-based planners for collision-free trajectory generation in configuration space.</p>
         <div class="skill-tags">
-          <span class="skill-tag">Computer Vision</span>
-          <span class="skill-tag">Deep Learning (PyTorch)</span>
-          <span class="skill-tag">NeRF</span>
-          <span class="skill-tag">Machine Perception</span>
-          <span class="skill-tag">Sim-to-Real</span>
+          <span class="skill-tag">BiEST</span>
+          <span class="skill-tag">MoveIt 2</span>
+          <span class="skill-tag">OMPL</span>
+          <span class="skill-tag">C++ Plugins</span>
         </div>
       </div>
 
       <div class="skill-category">
-        <h3>🤖 Autonomy & Navigation</h3>
-        <p>Full-stack ROS 2 autonomy — from Gazebo simulation through real hardware deployment on aerial, ground, and underwater platforms.</p>
+        <h3>Perception & ML</h3>
+        <p>Computer vision pipelines, ArUco-based precision landing, deep learning for classification, and from-scratch autograd engines.</p>
         <div class="skill-tags">
-          <span class="skill-tag">ROS 2</span>
-          <span class="skill-tag">Waypoint Navigation</span>
-          <span class="skill-tag">Trajectory Tracking</span>
-          <span class="skill-tag">Mobile Robotics</span>
-          <span class="skill-tag">Underwater Autonomy</span>
+          <span class="skill-tag">OpenCV</span>
+          <span class="skill-tag">PyTorch</span>
+          <span class="skill-tag">ArUco</span>
+          <span class="skill-tag">Backpropagation</span>
         </div>
       </div>
 
       <div class="skill-category">
-        <h3>📡 State Estimation</h3>
-        <p>Fusing noisy, heterogeneous sensor data into reliable state estimates — EKF design, GPS smoothing, and navigation in GPS-denied environments.</p>
+        <h3>Embedded & Mechatronics</h3>
+        <p>Sensor integration, real-time embedded control, motor drives, and full electromechanical system design.</p>
         <div class="skill-tags">
-          <span class="skill-tag">Extended Kalman Filters</span>
-          <span class="skill-tag">GPS Smoothing</span>
-          <span class="skill-tag">IMU/Accel/Mag Fusion</span>
-          <span class="skill-tag">GPS-Denied Navigation</span>
-        </div>
-      </div>
-
-      <div class="skill-category">
-        <h3>🏭 Industrial Automation</h3>
-        <p>Safety-critical control systems for 24/7 production — PLC programming, fault-tolerant interlocks, and deterministic sequencing across manufacturing industries.</p>
-        <div class="skill-tags">
-          <span class="skill-tag">Allen-Bradley PLCs</span>
+          <span class="skill-tag">Arduino</span>
+          <span class="skill-tag">Pixhawk</span>
+          <span class="skill-tag">NVIDIA Jetson</span>
+          <span class="skill-tag">Bradley PLCs</span>
           <span class="skill-tag">Safety Interlocks</span>
           <span class="skill-tag">VFD Motor Control</span>
           <span class="skill-tag">Embedded Real-Time</span>
