@@ -1,15 +1,14 @@
 ---
 layout: project
 title: "Mobile Manipulation with Quadratic Programming"
-description: "A full-stack ROS 2 mobile manipulation system combining the Clearpath Husky A200 base, Universal Robots UR5e arm, and Robotiq 2F-85 gripper — unified through QP-based whole-body motion planning, modular xacro architecture, and seamless sim-to-real transfer via ros2_control."
-status: ongoing
+description: "Building a full-stack ROS 2 mobile manipulation system from scratch. Clearpath Husky A200 base, Universal Robots UR5e arm, and Robotiq 2F-85 gripper controlled through a unified QP-based whole-body motion planner that coordinates the base and arm simultaneously. Modular xacro architecture with sim-to-real transfer via ros2_control. Status: ongoing."
 date: 2025-02-01
 categories: [Mobile Robotics, Manipulation, Motion Planning, ROS2, C++, Python]
 featured_image: "/assets/images/projects/mobile-manipulation-qp/featured.png"
 github_url: "https://github.com/Seyi-roboticist/mobile_manipulation_qp"
 
 code_files:
-  - name: "Composable URDF — Top-Level Bringup"
+  - name: "Composable URDF: Top-Level Bringup"
     file: "mobile_manipulation.urdf.xacro"
     language: "xml"
     download_url: "https://github.com/Seyi-roboticist/mobile_manipulation_qp"
@@ -42,9 +41,15 @@ code_files:
       </robot>
 ---
 
-This project builds a complete mobile manipulation system from the ground up in ROS 2 Humble. The robot combines three subsystems — a Clearpath Husky A200 mobile base for locomotion, a Universal Robots UR5e 6-DOF arm for manipulation, and a Robotiq 2F-85 adaptive gripper for grasping — into a single coordinated platform controlled through quadratic programming.
+This project is ongoing. I'm building a complete mobile manipulation system from the ground up in ROS 2 Humble. Not a nav2-to-MoveIt handoff. Not a "drive then reach" pipeline. The full stack: perception, whole-body QP planning, ros2_control hardware abstraction, and coordinated base-arm execution. Three subsystems, one unified planner.
 
-The core challenge is whole-body motion planning: simultaneously commanding the base velocity and arm joint trajectories so the end-effector reaches its target while the base positions itself optimally, all without collisions. I formulate this as a QP problem that balances task-space tracking against joint limits, velocity bounds, and obstacle constraints in real time.
+The robot pairs a Clearpath Husky A200 mobile base with a Universal Robots UR5e 6-DOF arm and a Robotiq 2F-85 adaptive gripper. I chose these specifically because they all have solid ROS 2 driver support and well-documented hardware interfaces, which matters when the goal is seamless sim-to-real transfer.
+
+## Why This Project
+
+Most mobile manipulation systems treat the base and arm as separate problems. Drive to a position, stop, then plan and execute the arm motion. That works, but it's slow, and it throws away a huge chunk of the robot's reachable workspace. The base and arm form a single kinematic chain with 8+ degrees of freedom, and if you plan over all of them simultaneously, the robot can navigate and manipulate in one coordinated motion. That's the idea behind the QP formulation here.
+
+This builds directly on my work with the [Cartesian controller](/projects/cartesian-controller), where I implemented damped least-squares Jacobian IK for the UR5e at 500Hz. The mobile manipulation problem is the same math extended to a larger kinematic chain: now the Jacobian includes the base velocity terms alongside the arm joints, and the QP solver handles the joint limits, velocity bounds, and collision constraints that come with coordinating two very different actuator systems.
 
 ## System Architecture
 
@@ -100,29 +105,27 @@ flowchart LR
 
 ### Whole-Body QP Formulation
 
-The system treats the mobile base and arm as a single kinematic chain. At each control cycle, the QP solver takes the desired end-effector pose and computes optimal joint velocities for all actuated joints (base wheels + arm joints) simultaneously:
+I treat the mobile base and arm as a single kinematic chain. At each control cycle, the QP solver takes the desired end-effector pose and computes optimal joint velocities for all actuated joints (base wheels + arm joints) simultaneously:
 
 $$\min_{\dot{q}} \; \| J(q)\dot{q} - \dot{x}_{\text{des}} \|^2 + \lambda \|\dot{q}\|^2$$
 
-subject to joint position limits, velocity bounds, and collision constraints. The regularization term $\lambda$ prevents excessive joint velocities near singularities — similar to the damped least-squares approach I use in my Cartesian controller, but extended here to coordinate the base and arm together.
+subject to joint position limits, velocity bounds, and collision constraints. The regularization term $\lambda$ prevents excessive joint velocities near singularities. This is the same Tikhonov damping idea from my Cartesian controller, but the Jacobian is now a wider matrix that spans both the base and arm DOFs. The cost function balances tracking accuracy against joint effort, and the constraints keep everything physically safe.
 
 ### Modular URDF Architecture
 
-Each subsystem — base, arm, gripper — is defined as an independent xacro module. The top-level bringup xacro composes them via fixed joints: the UR5e mounts to the Husky's `top_plate_link`, and the Robotiq attaches to the arm's `tool0` flange. This produces a single unified URDF tree with consistent TF frames across simulation and real hardware.
+Each subsystem (base, arm, gripper) lives in its own xacro module. The top-level bringup xacro composes them through fixed joints: the UR5e mounts to the Husky's `top_plate_link`, and the Robotiq attaches to the arm's `tool0` flange. This gives a single unified URDF tree with consistent TF frames across simulation and real hardware.
+
+The modularity is the point. Swapping the arm model, gripper, or sensor payload means changing one xacro include and one mount joint. Everything downstream, the controller configs, the planning scene, the launch files, adapts automatically. I learned from the Aurelia project how much time you waste when the URDF is tangled up with the rest of the stack, so I structured this one to be cleanly separable from the start.
 
 ### Sim-to-Real via ros2_control
 
-The system uses `ros2_control` hardware abstractions so the same controller code runs in Gazebo Ignition simulation and on the physical robot. A launch argument (`use_sim:=true/false`) switches between the Gazebo hardware interface and real drivers. The Gazebo simulation includes accurate physics for the Husky drivetrain, UR5e dynamics, and gripper contact forces.
+The system uses `ros2_control` hardware abstractions so the same controller code runs in Gazebo Ignition and on the physical robot. A launch argument (`use_sim:=true/false`) switches between the Gazebo hardware interface and real drivers. Same pattern I used on the Aurelia X4, where `use_sim` and `use_real` toggled the full stack between SITL and the physical drone.
 
-## Key Capabilities
+I built the Gazebo simulation with accurate physics for the Husky drivetrain, UR5e dynamics, and gripper contact forces. If the sim doesn't match the real robot, the whole point of simulation is lost. I treated the physics modeling as a first-class engineering task, not an afterthought.
 
-**Coordinated Base-Arm Planning** — The QP planner simultaneously commands base velocity and arm joint trajectories, enabling the robot to navigate and manipulate in a single coordinated motion rather than stop-move-reach sequences.
+### Dev Container Workflow
 
-**Modular Reconfigurability** — Swapping the arm model (UR5 vs UR5e), gripper, or sensor payload requires changing only the relevant xacro include and mount joint. The rest of the system adapts automatically.
-
-**Seamless Simulation** — Full Gazebo Ignition environment with physics-accurate models for all three subsystems. Identical ROS 2 topics, services, and actions between sim and real hardware.
-
-**Dev Container Workflow** — Reproducible development environment using Docker with ROS 2 Humble, pre-configured VS Code extensions, X11 forwarding for RViz/Gazebo, and GPU passthrough for simulation performance.
+The entire development environment runs in a Docker container with ROS 2 Humble, pre-configured VS Code extensions, X11 forwarding for RViz and Gazebo, and GPU passthrough for simulation performance. Clone the repo, build the container, and everything works. No dependency hunting, no version conflicts.
 
 ## Tech Stack
 
