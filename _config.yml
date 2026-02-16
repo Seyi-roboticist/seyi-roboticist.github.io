@@ -13,6 +13,14 @@ author:
   github: "Seyi-roboticist"
   linkedin: "oluwaseyi-r-afolayan-4b8330206"  # full LinkedIn slug for better linking
 
+navigation:
+  - title: "Home"
+    url: "/"
+  - title: "Projects"
+    url: "/projects/"
+  - title: "About"
+    url: "/about/"
+
 # Build settings
 markdown: kramdown
 highlighter: rouge
