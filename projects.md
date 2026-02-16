@@ -23,28 +23,27 @@ permalink: /projects/
         </div>
 
         <!-- ============================================ -->
-        <!--              ONGOING PROJECTS                -->
+        <!--            COMPLETED PROJECTS                -->
         <!-- ============================================ -->
 
-        {% assign ongoing_projects = site.projects | where: "status", "ongoing" | sort: "date" | reverse %}
+        {% assign completed_projects = site.projects | where: "status", "completed" | sort: "date" | reverse %}
 
-        {% if ongoing_projects.size > 0 %}
-        <div class="projects-section" id="ongoing-section">
+        {% if completed_projects.size > 0 %}
+        <div class="projects-section" id="completed-section">
             <div class="projects-section-header" style="margin-bottom: 32px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
                 <h2 style="color: var(--text-primary); font-size: var(--font-size-2xl); letter-spacing: -0.01em; margin: 0 0 6px 0; display: flex; align-items: center; gap: 10px;">
-                    <span style="display: inline-block; width: 10px; height: 10px; background: #34d399; border-radius: 50%; animation: pulse-dot 2s ease-in-out infinite;"></span>
-                    Ongoing Projects
+                    <span style="display: inline-block; width: 10px; height: 10px; background: var(--primary-color, #6366f1); border-radius: 50%;"></span>
+                    Completed Projects
                 </h2>
-                <p style="color: var(--text-secondary); opacity: 0.6; margin: 0; font-weight: 300; font-size: var(--font-size-sm);">Currently in active development</p>
+                <p style="color: var(--text-secondary); opacity: 0.6; margin: 0; font-weight: 300; font-size: var(--font-size-sm);">Finished works and shipped deliverables</p>
             </div>
 
-            <div class="projects-grid" id="ongoing-grid">
-                {% for project in ongoing_projects %}
+            <div class="projects-grid" id="completed-grid">
+                {% for project in completed_projects %}
                 <article class="project-card" 
                          data-categories="{% for cat in project.categories %}{{ cat | slugify }} {% endfor %}"
-                         data-status="ongoing">
+                         data-status="completed">
                     
-                    <!-- Project Image/Preview -->
                     <div class="project-preview">
                         {% if project.featured_image %}
                             <img src="{{ project.featured_image | relative_url }}" 
@@ -66,9 +65,6 @@ permalink: /projects/
                             </div>
                         {% endif %}
                         
-                        <!-- Ongoing badge -->
-                        <div style="position: absolute; top: 12px; right: 12px; background: #34d399; color: #0a0a0f; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.04em; text-transform: uppercase;">In Progress</div>
-
                         <div class="project-overlay">
                             <a href="{{ project.url | relative_url }}" class="project-link">
                                 <i class="fas fa-eye"></i>
@@ -77,7 +73,6 @@ permalink: /projects/
                         </div>
                     </div>
                     
-                    <!-- Project Info -->
                     <div class="project-info">
                         <div class="project-categories">
                             {% for category in project.categories %}
@@ -143,28 +138,27 @@ permalink: /projects/
         {% endif %}
 
         <!-- ============================================ -->
-        <!--            COMPLETED PROJECTS                -->
+        <!--              ONGOING PROJECTS                -->
         <!-- ============================================ -->
 
-        {% assign completed_projects = site.projects | where: "status", "completed" | sort: "date" | reverse %}
+        {% assign ongoing_projects = site.projects | where: "status", "ongoing" | sort: "date" | reverse %}
 
-        {% if completed_projects.size > 0 %}
-        <div class="projects-section" id="completed-section" style="{% if ongoing_projects.size > 0 %}margin-top: 64px;{% endif %}">
+        {% if ongoing_projects.size > 0 %}
+        <div class="projects-section" id="ongoing-section" style="{% if completed_projects.size > 0 %}margin-top: 64px;{% endif %}">
             <div class="projects-section-header" style="margin-bottom: 32px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
                 <h2 style="color: var(--text-primary); font-size: var(--font-size-2xl); letter-spacing: -0.01em; margin: 0 0 6px 0; display: flex; align-items: center; gap: 10px;">
-                    <span style="display: inline-block; width: 10px; height: 10px; background: var(--primary-color, #6366f1); border-radius: 50%;"></span>
-                    Completed Projects
+                    <span style="display: inline-block; width: 10px; height: 10px; background: #34d399; border-radius: 50%; animation: pulse-dot 2s ease-in-out infinite;"></span>
+                    Ongoing Projects
                 </h2>
-                <p style="color: var(--text-secondary); opacity: 0.6; margin: 0; font-weight: 300; font-size: var(--font-size-sm);">Finished works and shipped deliverables</p>
+                <p style="color: var(--text-secondary); opacity: 0.6; margin: 0; font-weight: 300; font-size: var(--font-size-sm);">Currently in active development</p>
             </div>
 
-            <div class="projects-grid" id="completed-grid">
-                {% for project in completed_projects %}
+            <div class="projects-grid" id="ongoing-grid">
+                {% for project in ongoing_projects %}
                 <article class="project-card" 
                          data-categories="{% for cat in project.categories %}{{ cat | slugify }} {% endfor %}"
-                         data-status="completed">
+                         data-status="ongoing">
                     
-                    <!-- Project Image/Preview -->
                     <div class="project-preview">
                         {% if project.featured_image %}
                             <img src="{{ project.featured_image | relative_url }}" 
@@ -186,6 +180,9 @@ permalink: /projects/
                             </div>
                         {% endif %}
                         
+                        <!-- Ongoing badge -->
+                        <div style="position: absolute; top: 12px; right: 12px; background: #34d399; color: #0a0a0f; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.04em; text-transform: uppercase;">In Progress</div>
+
                         <div class="project-overlay">
                             <a href="{{ project.url | relative_url }}" class="project-link">
                                 <i class="fas fa-eye"></i>
@@ -194,7 +191,6 @@ permalink: /projects/
                         </div>
                     </div>
                     
-                    <!-- Project Info -->
                     <div class="project-info">
                         <div class="project-categories">
                             {% for category in project.categories %}
