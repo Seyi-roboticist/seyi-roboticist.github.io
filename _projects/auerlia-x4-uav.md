@@ -166,7 +166,7 @@ code_files:
 
 ## Overview
 
-This was my capstone project for *Robot System Programming* at Johns Hopkins, and it's the one I'm proudest of from grad school. I served as team lead, FAA-certified Remote Pilot-in-Command, and principal software architect for a team of five building a complete ROS 2 autonomy stack for the Aurelia X4, a professional heavy-lift quadcopter with a Pixhawk flight controller running ArduPilot.
+This was my capstone project for *Robot System Programming* at Johns Hopkins, and it's the one I'm proudest of from grad school. I served as team lead, FAA-certified Remote Pilot-in-Command, and principal software architect for a team of five building a complete ROS 2 autonomy stack for the Aurelia X4, a professional heavy-lift quadcopter with a CubePilot Cube Orange flight controller running ArduPilot.
 
 What made this project meaningful is the context: multiple previous student cohorts had attempted this same platform and failed to get a working system. The drone had hardware issues from prior semesters, the software stack was fragmented, and nobody had managed to close the loop from simulation to real flight. On top of that, the Aurelia X4 had zero existing ROS or ROS 2 support. No URDF, no Gazebo plugins, no community packages, nothing. Every other popular drone platform (Iris, Crazyflie, Tello) has ready-made ROS integrations you can pull off the shelf. We had to build ours from scratch.
 
@@ -180,7 +180,11 @@ The system spans seven ROS 2 packages covering URDF modeling, Gazebo Fortress si
 
 ![Aurelia X4 Physical Hardware](/assets/images/projects/aurelia/aurelia-x4-hardware.png)
 
-*The Aurelia X4 with arms folded during a bench test session at JHU. Visible: CubePilot flight controller, GPS mast, XT60 power connectors, and carbon fiber frame.*
+*The Aurelia X4 with arms folded during a bench test session at JHU. Visible: CubePilot Cube Orange flight controller, GPS mast, XT60 power connectors, and carbon fiber frame.*
+
+![Motor Arm Test](/assets/images/projects/aurelia/test_arms.gif)
+
+*Motor arm spin-up test validating motor direction, ESC calibration, and propeller configuration before first flight.*
 
 ![RViz URDF Model + MAVROS Arming](/assets/images/projects/aurelia/aurelia-x4-rviz-mavros.png)
 
@@ -203,7 +207,7 @@ flowchart TB
     end
 
     subgraph Hardware["Real Hardware"]
-        D["Pixhawk FC"]
+        D["CubePilot Cube Orange"]
         E["Aurelia X4"]
     end
 
@@ -238,7 +242,46 @@ Rather than trying to patch what existed, we made the decision to rebuild from t
 
 **x4_description** contains the URDF/xacro model we built from scratch by working through the Aurelia X4's mechanical specifications. Since no existing model existed anywhere, we measured the physical airframe, weighed each structural component and actuator, and derived the inertia matrices by hand. The model includes mesh files for visualization, collision geometries for Gazebo's physics engine, and sensor frames for the GPS, IMU, and camera. This package is shared between simulation and real hardware, so everything that follows is built on the same geometric truth.
 
-**x4_gazebo** handles the Ignition Gazebo Fortress simulation environment, including world files, plugin configurations, and simulation-specific launch files. We used the ArduPilot Gazebo plugin to connect the simulated airframe to ArduPilot's SITL (Software in the Loop), which means the flight controller running in simulation is identical to the one running on the physical Pixhawk.
+### Platform Specifications
+
+We pulled these from the Aurelia Aerospace datasheets and validated them against our physical unit:
+
+| Parameter | Value |
+|---|---|
+| Empty weight | 2,450 g (5.40 lb) |
+| MTOW (LiPo / LE) | 5,212 g / 5,424 g |
+| Max payload | 1.5 kg (3.3 lb) |
+| Max speed | 56 km/h (35 mph) |
+| Max wind resistance | 32 km/h (20 mph) |
+| Max service ceiling | 3,000 m ASL |
+| Flight time (standard / LE) | 25 min / 40 min |
+| Flight range | Up to 5 km |
+| Battery | 6S 22.2V LiPo (10,000 mAh) |
+| Flight controller | CubePilot Cube Orange with ADS-B |
+| GPS | uBlox M9N (GPS, GLONASS, Galileo, BeiDou) |
+| Compass | RM3100 |
+| IMU redundancy | 2 accelerometers, 2 gyroscopes, 1 magnetometer |
+| Rangefinder | LiDAR, 0-12 m range, $\pm$6 cm accuracy |
+| Airframe span | 835 mm |
+| Software | ArduPilot Copter 4.5 |
+
+### SolidWorks Mass Properties for URDF
+
+To get the Gazebo simulation right, we needed accurate mass and inertia properties for every link in the URDF. I used SolidWorks to compute the mass properties from the provided CAD model, making minor adjustments to account for the top box and landing gear which were not included in the original geometry.
+
+![SolidWorks Mass Properties](/assets/images/projects/aurelia/aurelia-mass-properties.png)
+
+The full inertia tensor at the center of mass, aligned with the output coordinate system and using positive tensor notation:
+
+$$\mathbf{I}_{\text{CoM}} \;=\; \begin{bmatrix} I_{xx} & I_{xy} & I_{xz} \\ I_{yx} & I_{yy} & I_{yz} \\ I_{zx} & I_{zy} & I_{zz} \end{bmatrix} \;=\; \begin{bmatrix} 0.1548 & 0.0026 & -0.0000 \\ 0.0026 & 0.1863 & 0.0035 \\ -0.0000 & 0.0035 & 0.1628 \end{bmatrix} \;\text{kg}\!\cdot\!\text{m}^2$$
+
+The near-zero off-diagonal terms ($I_{xz}$, $I_{zx}$) confirm the airframe's bilateral symmetry about the $xz$-plane, which is expected for a quad-X configuration. The center of mass sits almost exactly at the geometric center:
+
+$$\mathbf{r}_{\text{CoM}} \;=\; \begin{bmatrix} -0.031 \\ -0.728 \\ -6.885 \end{bmatrix} \;\text{mm}$$
+
+The total mass at MTOW came out to $m = 5.424\;\text{kg}$, matching the Aurelia LE specification. These values were plugged directly into the URDF's `<inertial>` tags, and getting them right was critical. If the inertia tensor is even moderately wrong, the ArduPilot SITL PID tuning will not transfer to hardware, and the drone either oscillates or drifts on real flights.
+
+**x4_gazebo** handles the Ignition Gazebo Fortress simulation environment, including world files, plugin configurations, and simulation-specific launch files. We used the ArduPilot Gazebo plugin to connect the simulated airframe to ArduPilot's SITL (Software in the Loop), which means the flight controller running in simulation is identical to the one running on the physical Cube Orange.
 
 **x4_bringup** is the entry point. A single launch file brings up the entire system with a `use_sim` or `use_real` flag, which means the same ROS 2 graph runs in both contexts. This sim-to-real parity was a deliberate design choice, and it's what let us iterate quickly in Gazebo before committing to real flights.
 
@@ -256,7 +299,7 @@ We chose MAVROS over ArduPilot's native DDS interface (Micro-XRCE-DDS) because a
 
 The flight control pipeline works as follows. A service script sends a `SetMode` request to switch the vehicle to GUIDED mode. Then an arming command enables the motors. From there, the script can issue a `CommandTOL` (takeoff/land) or publish `SET_POSITION_TARGET_LOCAL_NED` messages for waypoint following. Each step includes response validation so the system confirms the vehicle has actually transitioned before moving to the next command.
 
-For real hardware flights, the only change is the MAVROS `fcu_url` parameter, which switches from the SITL UDP endpoint to a serial connection to the physical Pixhawk. Everything else in the ROS 2 graph remains identical.
+For real hardware flights, the only change is the MAVROS `fcu_url` parameter, which switches from the SITL UDP endpoint to a serial connection to the physical Cube Orange. Everything else in the ROS 2 graph remains identical.
 
 ## Vision-Based Precision Landing
 
@@ -268,9 +311,9 @@ The resulting pose is published as a `PoseStamped` message on `/aruco/pose`, whi
 
 ## The Physical Flights
 
-Getting from simulation to real flight involved more than just changing a launch parameter. I had to diagnose and repair hardware damage from previous semesters, recalibrate the Pixhawk's sensors (accelerometer, compass, GPS), verify motor spin directions, and perform multiple ground tests before we were cleared for flight. As the FAA-certified Remote Pilot-in-Command (Part 107), I was responsible for all flight safety decisions, airspace compliance, and go/no-go calls.
+Getting from simulation to real flight involved more than just changing a launch parameter. I had to diagnose and repair hardware damage from previous semesters, recalibrate the Cube Orange's sensors (accelerometer, compass, GPS), verify motor spin directions, and perform multiple ground tests before we were cleared for flight. As the FAA-certified Remote Pilot-in-Command (Part 107), I was responsible for all flight safety decisions, airspace compliance, and go/no-go calls.
 
-We successfully demonstrated takeoff, stable hover, waypoint navigation, and landing on the physical Aurelia X4. The transition from simulation was smooth because the ArduPilot SITL and real Pixhawk run the same firmware, and our ROS 2 stack was designed from the start to be hardware-agnostic.
+We successfully demonstrated takeoff, stable hover, waypoint navigation, and landing on the physical Aurelia X4. The transition from simulation was smooth because the ArduPilot SITL and real Cube Orange run the same firmware, and our ROS 2 stack was designed from the start to be hardware-agnostic.
 
 ## Results
 
