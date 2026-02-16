@@ -321,7 +321,9 @@ I'm including this because robotics includes failure, and the failures are where
 
 During one of our night tests, I ran a MAVROS script to command a takeoff-and-waypoint sequence through ROS 2. The drone armed, lifted off, and started executing the commanded trajectory. Then we lost communication. The MAVLink heartbeat dropped, and the MAVROS node could no longer send velocity or mode commands to the Cube Orange.
 
-I was already holding the RC transmitter, which is standard procedure for any scripted flight. As PIC, I always keep the transmitter in hand so I can override instantly if something goes wrong. I switched to LOITER mode manually, but by that point the drone had already picked up lateral velocity with no active correction, and there wasn't enough altitude to recover. It came down hard.
+I was already holding the RC transmitter, which is standard procedure for any scripted flight. As PIC, I always keep the transmitter in hand so I can override instantly if something goes wrong. I switched to LOITER mode manually and regained control, but the drone had already drifted into the trees. I managed to bring it down from there, but the landing was too hard and it crashed.
+
+Part of what made this difficult is that the Aurelia X4 handles nothing like the lighter drones I've flown as a licensed remote pilot. The takeoff and landing characteristics of a heavy-lift platform at 5.4 kg MTOW are fundamentally different. The throttle response is less linear, the momentum on descent is harder to arrest, and the ground effect zone is wider and more turbulent. Those are things you can read about, but you only internalize them after flying the actual aircraft.
 
 <a href="https://www.youtube.com/shorts/ft24ixGnmKI" target="_blank">
   <img src="https://img.youtube.com/vi/ft24ixGnmKI/maxresdefault.jpg" alt="Aurelia X4 Night Flight Test" style="max-width: 400px; width: 100%; border-radius: 8px; margin: 1rem 0;">
