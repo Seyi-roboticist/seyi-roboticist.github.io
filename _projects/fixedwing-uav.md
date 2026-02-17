@@ -6,6 +6,7 @@ date: 2024-11-28
 status: completed
 categories: [Controls, Flight, MATLAB, State-Estimation]
 featured_image: "/assets/images/projects/fixedwing-uav/uavsim_simulation.png"
+demo_url: "https://www.youtube.com/watch?v=4pQiyCt7t14"
 
 gallery:
   - type: "image"
@@ -182,171 +183,105 @@ code_files:
     margin-bottom: 1rem;
     font-size: 1.1rem;
   }
-  .ekf-step {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    margin: 1rem 0;
+  .video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border-radius: 10px;
+    margin: 2rem 0;
+    border: 1px solid var(--border-color, #333);
   }
-  .ekf-step-num {
-    flex-shrink: 0;
-    width: 28px;
-    height: 28px;
-    background: var(--primary-color, #6366f1);
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-    font-weight: 700;
+  .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
   }
-  .note-box {
-    background: rgba(52,211,153,0.06);
-    border: 1px solid rgba(52,211,153,0.2);
-    border-radius: 8px;
-    padding: 1rem 1.4rem;
-    margin: 1rem 0;
-    font-size: 0.92rem;
+  .diagram-full {
+    margin: 2rem 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border-color, #333);
+    background: #fff;
+  }
+  .diagram-full img {
+    width: 100%;
+    display: block;
+  }
+  .diagram-full .caption {
+    padding: 0.8rem 1.2rem;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    background: var(--surface-color, #1a1a2e);
+    border-top: 1px solid var(--border-color, #333);
   }
 </style>
 
 ## Overview
 
-I built a complete autopilot and state estimation system for a fixed-wing UAV from first principles. No off-the-shelf autopilot stacks, no borrowed controllers. Every transfer function, every Jacobian, every covariance matrix was derived by hand, implemented in MATLAB/Simulink, and validated against a nonlinear 6DOF simulation under wind disturbances.
+I built a complete autopilot and state estimation system for a fixed-wing UAV from first principles. No off-the-shelf autopilot stacks, no borrowed controllers. Every transfer function, every Jacobian, every covariance matrix -- derived by hand, implemented in MATLAB/Simulink, and validated against a nonlinear 6DOF simulation under wind disturbances.
 
-The system has five tightly coupled subsystems: a nonlinear plant model with full aerodynamic forces, a successive loop closure PID control architecture, a 2-state Extended Kalman Filter for attitude estimation, a 6-state EKF GPS smoother with accelerometer-propagated velocity, and a 3-state EKF that estimates aerodynamic drag from camera-only measurements. I derived every Jacobian by hand, tuned every noise matrix with physical reasoning, and closed the loop around my own state estimates.
+The core of the project is two Extended Kalman Filters running in parallel: one fusing gyro and accelerometer data to estimate attitude, the other smoothing 1Hz GPS measurements into continuous position/velocity estimates using accelerometer-propagated velocity. Both feed into a successive loop closure PID autopilot that tracks waypoints in gusting wind.
 
----
+## Demo
+
+<div class="video-container">
+  <iframe src="https://www.youtube.com/embed/4pQiyCt7t14" allowfullscreen></iframe>
+</div>
 
 ## Simulink Architecture
 
-I organized the simulation as a modular Simulink block diagram with six major subsystems connected in a closed feedback loop:
+<div class="diagram-full">
+  <img src="/assets/images/projects/fixedwing-uav/uavsim_block_diagram.png" alt="UAVSIM Simulink Block Diagram">
+  <div class="caption">Full Simulink block diagram. Six subsystems in a closed feedback loop: trajectory commands, flight control, forces & moments, kinematics & dynamics, sensors, and state estimation. The feedback switch lets me toggle between truth and estimated states for systematic validation.</div>
+</div>
 
-1. **Trajectory Commands** generates waypoint-based reference signals for altitude, airspeed, and course
-2. **Autopilot: Flight Control** implements nested PID controllers via successive loop closure, producing 4 control surface deflections ($$\delta_e, \delta_a, \delta_r, \delta_t$$)
-3. **Forces & Moments** computes aerodynamic forces and propulsion from control inputs, wind, and current state
-4. **Kinematics & Dynamics** integrates the full nonlinear 6DOF equations of motion (12 states)
-5. **Sensors** simulates noisy gyroscope, accelerometer, GPS (1Hz), barometer, magnetometer, and pitot tube
-6. **Autopilot: State Estimation** runs dual EKFs feeding clean estimates back to the flight controller
+Six major subsystems:
 
-A feedback switch lets me toggle between truth and estimated states, so I can systematically evaluate how estimator quality impacts closed-loop performance.
+1. **Trajectory Commands** -- waypoint-based reference signals for altitude, airspeed, and heading
+2. **Autopilot: Flight Control** -- nested PID controllers producing 4 control surface deflections ($$\delta_e, \delta_a, \delta_r, \delta_t$$)
+3. **Forces & Moments** -- aerodynamic forces and propulsion from control inputs, wind, and current state
+4. **Kinematics & Dynamics** -- full nonlinear 6DOF equations of motion (12 states)
+5. **Sensors** -- noisy gyro, accelerometer, GPS (1Hz), barometer, magnetometer, pitot tube
+6. **Autopilot: State Estimation** -- dual EKFs feeding clean estimates back to the controller
 
 ---
 
-## Control Architecture: Successive Loop Closure
+## Control Architecture
 
-The autopilot uses successive loop closure with bandwidth separation. Fast inner loops handle attitude, slower outer loops handle trajectory. No gain scheduling magic. Just clean PID design with proper bandwidth separation at each stage.
+The autopilot uses successive loop closure with bandwidth separation. Fast inner loops handle attitude, slower outer loops handle trajectory.
 
 <div class="system-block">
-<h3>Inner Loops (Attitude Rate + Attitude)</h3>
+<h3>Inner Loops (Attitude)</h3>
 
-**Pitch channel:** PID with rate feedback commands elevator deflection $$\delta_e$$ from pitch error. The inner rate loop provides damping, the outer attitude loop tracks $$\theta_c$$.
-
-**Roll channel:** Same structure. PID commands aileron deflection $$\delta_a$$ from roll error, with roll-rate gyro feedback for damping.
-
-Both have anti-windup. I tuned them by checking gain and phase margins at each stage.
+**Pitch:** PID with rate feedback commands $$\delta_e$$ from pitch error.
+**Roll:** PID commands $$\delta_a$$ from roll error, with roll-rate gyro feedback for damping.
+Both have anti-windup. Tuned by checking gain and phase margins at each stage.
 </div>
 
 <div class="system-block">
 <h3>Outer Loops (Trajectory)</h3>
 
-**Altitude hold:** Commands pitch angle $$\theta_c$$ from altitude error. Bandwidth separated from the pitch inner loop by at least 5x.
-
+**Altitude hold:** Commands $$\theta_c$$ from altitude error. Bandwidth separated from pitch inner loop by 5x+.
 **Airspeed hold:** Commands throttle $$\delta_t$$ from airspeed error.
-
-**Course hold:** Commands roll angle $$\phi_c$$ from heading error, with crosswind compensation and crab angle correction.
-</div>
-
-I derived transfer functions for all four channels and tuned the PID gains through systematic iteration, verifying margins at each stage.
-
----
-
-## Extended Kalman Filter: The Math
-
-All three EKFs in this project follow the same structure. For a nonlinear system:
-
-<div class="math-derivation">
-<h4>General EKF Equations</h4>
-
-**State dynamics:**
-
-$$\dot{\hat{x}} = f(\hat{x}, u)$$
-
-**Prediction step** (propagate state and covariance):
-
-$$\hat{x}_{k+1} = \hat{x}_k + T_s \cdot f(\hat{x}_k, u_k)$$
-
-$$P_{k+1} = P_k + T_s \left( A P_k + P_k A^\top + Q \right)$$
-
-where $$A = \frac{\partial f}{\partial x}\bigg\rvert_{\hat{x}}$$ is the Jacobian of the dynamics.
-
-**Correction step** (when measurements arrive):
-
-$$L = P C^\top \left( C P C^\top + R \right)^{-1}$$
-
-$$\hat{x} \leftarrow \hat{x} + L \left( y - h(\hat{x}) \right)$$
-
-$$P \leftarrow (I - LC) P$$
-
-where $$C = \frac{\partial h}{\partial x}\bigg\rvert_{\hat{x}}$$ is the Jacobian of the measurement model, and $$L$$ is the Kalman gain.
+**Course hold:** Commands $$\phi_c$$ from heading error, with crosswind compensation and crab angle correction.
 </div>
 
 ---
 
-## EKF 1: Drag Estimation from Camera-Only Measurements
+## Attitude EKF
 
-This EKF estimates the aerodynamic drag coefficient of a vertically launched projectile using only elevation angle measurements from a ground camera 200m away. I wanted to demonstrate how an EKF can infer states that are never directly measured, purely through the coupling encoded in the system dynamics.
-
-<div class="math-derivation">
-<h4>State Vector and Dynamics</h4>
-
-$$\mathbf{x} = \begin{bmatrix} z \\ \dot{z} \\ D \end{bmatrix}, \quad \dot{\mathbf{x}} = f(\mathbf{x}) = \begin{bmatrix} \dot{z} \\ -g \mp \frac{1}{m}D\dot{z}^2 \\ 0 \end{bmatrix}$$
-
-where the sign depends on the direction of travel: $$-\frac{1}{m}D\dot{z}^2$$ when $$\dot{z} \geq 0$$ (ascending), $$+\frac{1}{m}D\dot{z}^2$$ when $$\dot{z} < 0$$ (descending).
-</div>
-
-<div class="math-derivation">
-<h4>A Matrix (Jacobian of Dynamics)</h4>
-
-$$A = \frac{\partial f}{\partial \mathbf{x}} = \begin{bmatrix} \frac{\partial \dot{z}}{\partial z} & \frac{\partial \dot{z}}{\partial \dot{z}} & \frac{\partial \dot{z}}{\partial D} \\[6pt] \frac{\partial \ddot{z}}{\partial z} & \frac{\partial \ddot{z}}{\partial \dot{z}} & \frac{\partial \ddot{z}}{\partial D} \\[6pt] \frac{\partial \dot{D}}{\partial z} & \frac{\partial \dot{D}}{\partial \dot{z}} & \frac{\partial \dot{D}}{\partial D} \end{bmatrix} = \begin{bmatrix} 0 & 1 & 0 \\[4pt] 0 & \mp\frac{2}{m}D\dot{z} & \mp\frac{1}{m}\dot{z}^2 \\[4pt] 0 & 0 & 0 \end{bmatrix}$$
-
-</div>
-
-<div class="math-derivation">
-<h4>Measurement Model and C Matrix</h4>
-
-The camera measures the elevation angle to the projectile:
-
-$$y = h(\mathbf{x}) = \tan^{-1}\!\left(\frac{z}{r_{\text{cam}}}\right), \quad r_{\text{cam}} = 200 \text{ m}$$
-
-Taking the derivative:
-
-$$\frac{\partial h}{\partial z} = \frac{1}{1 + \left(\frac{z}{r_{\text{cam}}}\right)^2} \cdot \frac{1}{r_{\text{cam}}} = \frac{r_{\text{cam}}}{r_{\text{cam}}^2 + z^2}$$
-
-Therefore:
-
-$$C = \begin{bmatrix} \frac{r_{\text{cam}}}{r_{\text{cam}}^2 + z^2} & 0 & 0 \end{bmatrix}$$
-</div>
-
-<div class="note-box">
-<strong>What makes this interesting:</strong> The camera only observes one scalar: the elevation angle. Yet the EKF successfully estimates all three states, including drag, which is never directly measured. It works because the A and C matrices encode the physics. Changes in elevation angle inform height. Height changes over time inform velocity. Deviations from a pure ballistic trajectory inform drag. The Kalman gain automatically weights these inferences against the statistical uncertainties in P, Q, and R.
-
-My resulting drag estimate converged to $$D = 1.285 \times 10^{-4}$$ N/(m/s)$$^2$$ with a 1-sigma uncertainty of $$\pm 4.649 \times 10^{-6}$$ N/(m/s)$$^2$$. The filter figured out drag from angle measurements alone.
-</div>
-
----
-
-## EKF 2: Attitude Estimation (Roll & Pitch)
-
-The attitude EKF estimates roll ($$\phi$$) and pitch ($$\theta$$) by fusing gyroscope measurements in the prediction step with accelerometer measurements in the correction step. I derived every matrix by hand and tuned the noise parameters using physical reasoning about the sensor characteristics and modeling simplifications.
+The attitude EKF estimates roll ($$\phi$$) and pitch ($$\theta$$) by fusing gyroscope measurements (prediction) with accelerometer measurements (correction). I derived every matrix by hand.
 
 <div class="math-derivation">
 <h4>State Vector and Euler Angle Kinematics</h4>
 
 $$\hat{x}_{\text{att}} = \begin{bmatrix} \phi \\ \theta \end{bmatrix}, \quad f_{\text{att}} = \begin{bmatrix} p + q\sin\phi\tan\theta + r\cos\phi\tan\theta \\ q\cos\phi - r\sin\phi \end{bmatrix}$$
 
-where $$p, q, r$$ are the raw gyroscope measurements (body-frame angular rates).
+where $$p, q, r$$ are raw gyroscope measurements (body-frame angular rates).
 </div>
 
 <div class="math-derivation">
@@ -358,7 +293,7 @@ $$A_{\text{att}} = \begin{bmatrix} q\cos\phi\tan\theta - r\sin\phi\tan\theta & (
 <div class="math-derivation">
 <h4>Measurement Model (Accelerometer)</h4>
 
-Under the assumption that translational dynamics are much slower than rotational dynamics, the accelerometer measures the gravity vector resolved into the body frame plus centripetal terms:
+The accelerometer measures the gravity vector resolved into the body frame plus centripetal terms (assuming translational dynamics are much slower than rotational):
 
 $$h_{\text{att}} = \begin{bmatrix} q\hat{V}_a\sin\theta + g\sin\theta \\[4pt] r\hat{V}_a\cos\theta - p\hat{V}_a\sin\theta - g\cos\theta\sin\phi \\[4pt] -q\hat{V}_a\cos\theta - g\cos\theta\cos\phi \end{bmatrix}$$
 </div>
@@ -371,71 +306,49 @@ $$C_{\text{att}} = \begin{bmatrix} 0 & g\cos\theta + \hat{V}_a q\cos\theta \\[4p
 
 ### Noise Tuning
 
-For process noise, I used the gyro noise variance directly since gyro noise maps almost one-to-one to attitude rate error:
+For process noise, I used gyro noise variance directly since it maps one-to-one to attitude rate error:
 
 $$Q = \begin{bmatrix} \sigma_{\text{gyro}}^2 & 0 \\ 0 & \sigma_{\text{gyro}}^2 \end{bmatrix}$$
 
-The measurement noise was the tricky part. The raw accelerometer noise variance ($$\sigma^2_{\text{accel}} = 6.02 \times 10^{-4}$$ m$$^2$$/s$$^4$$) is way too small because the measurement model ignores aerodynamic effects, assumes translational dynamics are much slower than rotational, and throws away a bunch of other real-world dynamics. I had to scale R by $$10^{4.5}$$:
+The measurement noise was the tricky part. The raw accelerometer noise variance ($$\sigma^2_{\text{accel}} = 6.02 \times 10^{-4}$$ m$$^2$$/s$$^4$$) is way too small because the measurement model ignores aerodynamic effects and other real-world dynamics. I had to scale R by $$10^{4.5}$$:
 
 $$R = 10^{4.5} \times \begin{bmatrix} \sigma_{\text{accel}}^2 & 0 & 0 \\ 0 & \sigma_{\text{accel}}^2 & 0 \\ 0 & 0 & \sigma_{\text{accel}}^2 \end{bmatrix}$$
 
-This effectively tells the EKF: "trust the gyro-based prediction more than the accelerometer correction." The bigger R compensates for all the modeling simplifications I made in the measurement model.
-
-### Numerical Implementation
-
-I use **10 sub-steps** ($$N = 10$$) per sample period for the prediction to keep the covariance propagation numerically stable. After each update, I symmetrize: $$P \leftarrow \frac{1}{2}(P + P^\top)$$ and force real. The state estimate gets wrapped to $$[-\pi, \pi]$$ to prevent angle discontinuities.
+This tells the EKF: trust the gyro-based prediction more than the accelerometer correction. The bigger R compensates for all the modeling simplifications in the measurement model. I use **10 sub-steps** per sample period for numerical stability, symmetrize the covariance after each update, and wrap the state to $$[-\pi, \pi]$$.
 
 ---
 
-## EKF 3: GPS Smoother (Propagated Velocity Model)
+## GPS Smoother EKF
 
-The GPS smoother solves a real problem: 1Hz GPS is too slow for flight control. Raw 1Hz updates create discrete jumps in position and velocity, causing stepped responses in heading and altitude tracking. I built a 6-state EKF that propagates between GPS fixes using accelerometer data rotated into the NED frame, producing smooth estimates at the full sensor rate.
+1Hz GPS is too slow for flight control. Raw updates create discrete jumps in position and velocity, causing stepped responses in heading and altitude tracking. I built a 6-state EKF that propagates between GPS fixes using accelerometer data rotated into the NED frame.
 
 <div class="math-derivation">
-<h4>State Vector and Propagation Model</h4>
+<h4>State Vector and Propagated Velocity Model</h4>
 
 $$\hat{x}_{\text{gps}} = \begin{bmatrix} \hat{p}_n \\ \hat{p}_e \\ \hat{p}_d \\ \hat{v}_n \\ \hat{v}_e \\ \hat{v}_d \end{bmatrix}_{6 \times 1}, \quad f(\hat{x}, u) = \begin{bmatrix} \hat{v}_n \\ \hat{v}_e \\ \hat{v}_d \\ a_n^{\text{NED}} \\ a_e^{\text{NED}} \\ a_d^{\text{NED}} \end{bmatrix}$$
 
-where the NED-frame acceleration is computed from the body-frame accelerometer readings rotated by the attitude estimate and compensated for gravity:
+The NED-frame acceleration comes from body-frame accelerometer readings rotated by the attitude estimate and compensated for gravity:
 
 $$\mathbf{a}^{\text{NED}} = (R_b^{\text{NED}})^\top \begin{bmatrix} a_x \\ a_y \\ a_z \end{bmatrix} + \begin{bmatrix} 0 \\ 0 \\ g \end{bmatrix}$$
 
-This is the **propagated velocity model**: rather than assuming constant velocity between GPS fixes (which would give zero acceleration), I integrate body-frame accelerometer readings to propagate velocity at the full sensor rate.
+This is the key idea: rather than assuming constant velocity between GPS fixes, I integrate accelerometer readings to propagate velocity at the full sensor rate. No more discrete jumps.
 </div>
 
 <div class="math-derivation">
-<h4>A Matrix (6x6 State Transition Jacobian)</h4>
+<h4>A and C Matrices</h4>
 
-Since position derivative equals velocity and velocity derivative equals acceleration (which enters as an input, not a state), the A matrix is clean:
+Position derivative equals velocity, velocity derivative equals acceleration (enters as input, not state). Clean structure:
 
-$$A = \begin{bmatrix} 0_{3\times3} & I_{3\times3} \\ 0_{3\times3} & 0_{3\times3} \end{bmatrix}_{6\times6} = \begin{bmatrix} 0 & 0 & 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 & 0 & 0 \end{bmatrix}$$
+$$A = \begin{bmatrix} 0_{3\times3} & I_{3\times3} \\ 0_{3\times3} & 0_{3\times3} \end{bmatrix}_{6\times6}, \quad C = I_{6\times6}$$
+
+GPS corrections only fire when a new measurement arrives (~every 100 iterations). I detect this by comparing current $$p_n, p_e$$ against stored previous values.
 </div>
-
-<div class="math-derivation">
-<h4>C Matrix (Direct GPS Observation)</h4>
-
-GPS provides direct measurements of all 6 states (position and velocity):
-
-$$C = I_{6\times6}$$
-</div>
-
-### Measurement Gating
-
-GPS corrections only fire when a new measurement actually arrives (roughly every 100 iterations at the simulation rate). I detect this by comparing current $$p_n, p_e$$ values against stored previous values using persistent variables. Simple but effective.
-
-### Noise Parameters
-
-$$Q = \text{diag}(0.1^2, 0.1^2, 0.1^2, 0.2^2, 0.2^2, 0.2^2)$$
-
-$$R = \text{diag}(2^2, 2^2, 2^2, 0.1^2, 0.1^2, 0.1^2)$$
-
-The R accounts for roughly 2m of GPS position error over a few seconds and 0.1 m/s GPS velocity noise.
 
 ---
 
 ## Closing the Loop
 
-The final system feeds all my state estimates back to the autopilot:
+The final system feeds all state estimates back to the autopilot:
 
 | **State**         | **Source**                          |
 |-------------------|------------------------------------|
@@ -452,10 +365,19 @@ With the feedback switch set to estimates instead of truth, the UAV is simultane
 
 ## Results
 
-I validated the complete system over 200-second simulations with gusting winds enabled:
+I validated the complete system over 200-second runs with gusting winds:
 
-- **Altitude tracking:** Smooth transitions between commanded altitudes with minimal overshoot after the initial transient
-- **Attitude estimation:** Roll and pitch errors within +/-5 degrees (1-sigma), consistent with the initial covariance $$P_0$$
-- **GPS smoothing:** Sub-2m position error variation with smooth curvature between 1Hz measurements, validating the propagated velocity model
-- **Wind rejection:** Crosswind compensation maintained stable flight under steady wind and gusting conditions
-- **Estimator-to-truth transfer:** Minimal performance degradation when switching from truth feedback to estimated feedback
+<div class="diagram-full">
+  <img src="/assets/images/projects/fixedwing-uav/uavsim_simulation.png" alt="Full UAVSIM 200-second simulation">
+  <div class="caption">200-second closed-loop simulation with gusting winds and state estimate feedback. Left: altitude, airspeed, pitch, and roll tracking (red = command, blue = estimate, green = truth). Right: 3D waypoint trajectory.</div>
+</div>
+
+<div class="diagram-full">
+  <img src="/assets/images/projects/fixedwing-uav/uavsim_flight.png" alt="Flight simulation plots">
+  <div class="caption">Detailed flight data: altitude hold between 60-90m, airspeed regulation around 15 m/s, pitch and roll tracking under wind disturbance.</div>
+</div>
+
+- **Attitude estimation:** Roll and pitch errors within +/-5 degrees (1-sigma), consistent with $$P_0$$
+- **GPS smoothing:** Sub-2m position error variation with smooth curvature between 1Hz measurements
+- **Wind rejection:** Stable flight under steady wind and gusting conditions with crosswind compensation
+- **Estimator feedback:** Minimal performance degradation switching from truth to estimated feedback
