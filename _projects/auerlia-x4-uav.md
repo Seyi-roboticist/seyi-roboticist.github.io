@@ -179,6 +179,8 @@ The system spans seven ROS 2 packages covering URDF modeling, Gazebo Fortress si
 
 ## Demo
 
+### Hardware
+
 ![Aurelia X4 Physical Hardware](/assets/images/projects/aurelia/aurelia-x4-hardware.png)
 
 *The Aurelia X4 with arms folded during a bench test session at JHU. Visible: CubePilot Cube Orange flight controller, GPS mast, XT60 power connectors, and carbon fiber frame.*
@@ -190,6 +192,15 @@ The system spans seven ROS 2 packages covering URDF modeling, Gazebo Fortress si
 ![RViz URDF Model + MAVROS Arming](/assets/images/projects/aurelia/aurelia-x4-rviz-mavros.png)
 
 *Left: RViz visualization showing the X4 URDF model with TF frames for all four propellers, camera, IMU, and drone body. Right: MAVROS terminal output showing the full arming sequence, including GUIDED mode switch, motor arm confirmation, and ROS 2 service calls.*
+
+### Simulation
+
+This is the Gazebo Fortress SITL takeoff running the full pipeline: `x4_bringup` launches the Gazebo world with our custom URDF model, spins up ArduPilot SITL, connects MAVROS, and then executes the takeoff service script. The drone you see lifting off is using the same flight controller code, the same MAVROS interface, and the same ROS 2 service calls that run on the physical Cube Orange. The only difference is the `use_sim:=true` flag in the launch file. More simulation recordings (waypoint navigation, loiter, landing sequences) will be added later this week.
+
+<a href="https://www.youtube.com/watch?v=_AC4zI_K19c" target="_blank">
+  <img src="https://img.youtube.com/vi/_AC4zI_K19c/maxresdefault.jpg" alt="Aurelia X4 Gazebo SITL Takeoff Simulation" style="max-width: 600px; width: 100%; border-radius: 8px; margin: 1rem 0;">
+</a>
+<p><em>Click to watch: Gazebo Fortress SITL takeoff. ArduPilot SITL running the same flight controller firmware as the physical Cube Orange, commanded through MAVROS service calls via ROS 2.</em></p>
 
 ## System Architecture
 
@@ -282,7 +293,7 @@ $$\mathbf{r}_{\text{CoM}} \;=\; \begin{bmatrix} -0.031 \\ -0.728 \\ -6.885 \end{
 
 The total mass at MTOW came out to $m = 5.424\;\text{kg}$, matching the Aurelia LE specification. These values were plugged directly into the URDF's `<inertial>` tags, and getting them right was critical. If the inertia tensor is even moderately wrong, the ArduPilot SITL PID tuning will not transfer to hardware, and the drone either oscillates or drifts on real flights.
 
-**x4_gazebo** handles the Ignition Gazebo Fortress simulation environment, including world files, plugin configurations, and simulation-specific launch files. We used the ArduPilot Gazebo plugin to connect the simulated airframe to ArduPilot's SITL (Software in the Loop), which means the flight controller running in simulation is identical to the one running on the physical Cube Orange.
+**x4_gazebo** handles the Ignition Gazebo Fortress simulation environment, including world files, plugin configurations, and simulation-specific launch files. We used the ArduPilot Gazebo plugin to connect the simulated airframe to ArduPilot's SITL (Software in the Loop), which means the flight controller running in simulation is identical to the one running on the physical Cube Orange. The simulation takeoff video above is this package in action: the Gazebo world loads our custom URDF, the ArduPilot plugin bridges the simulated sensors and actuators, and the MAVROS takeoff service sends the same commands that would go to real hardware.
 
 **x4_bringup** is the entry point. A single launch file brings up the entire system with a `use_sim` or `use_real` flag, which means the same ROS 2 graph runs in both contexts. This sim-to-real parity was a deliberate design choice, and it's what let us iterate quickly in Gazebo before committing to real flights.
 
@@ -300,7 +311,7 @@ We chose MAVROS over ArduPilot's native DDS interface (Micro-XRCE-DDS) because a
 
 The flight control pipeline works as follows. A service script sends a `SetMode` request to switch the vehicle to GUIDED mode. Then an arming command enables the motors. From there, the script can issue a `CommandTOL` (takeoff/land) or publish `SET_POSITION_TARGET_LOCAL_NED` messages for waypoint following. Each step includes response validation so the system confirms the vehicle has actually transitioned before moving to the next command.
 
-For real hardware flights, the only change is the MAVROS `fcu_url` parameter, which switches from the SITL UDP endpoint to a serial connection to the physical Cube Orange. Everything else in the ROS 2 graph remains identical.
+For real hardware flights, the only change is the MAVROS `fcu_url` parameter, which switches from the SITL UDP endpoint to a serial connection to the physical Cube Orange. Everything else in the ROS 2 graph remains identical. You can see this exact pipeline executing in both the simulation takeoff video and the night flight video below: the same `mavros_takeoff` service script commanding the same GUIDED mode switch, arming sequence, and altitude command.
 
 ## Vision-Based Precision Landing
 
