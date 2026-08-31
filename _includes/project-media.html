@@ -1,0 +1,20 @@
+{%- comment -%}
+Card media for a project. Renders looping video when the project declares
+featured_video, otherwise the still. featured_image doubles as the video
+poster, so the card paints immediately and the clip fades in behind it.
+Usage: {% include project-media.html project=project class="project-image" %}
+{%- endcomment -%}
+{% if include.project.featured_video %}
+<video class="{{ include.class }}" autoplay loop muted playsinline
+    preload="metadata" poster="{{ include.project.featured_image | relative_url }}"
+    aria-label="{{ include.project.title }}">
+    {% if include.project.featured_video_webm %}
+    <source src="{{ include.project.featured_video_webm | relative_url }}" type="video/webm">
+    {% endif %}
+    <source src="{{ include.project.featured_video | relative_url }}" type="video/mp4">
+    <img src="{{ include.project.featured_image | relative_url }}" alt="{{ include.project.title }}">
+</video>
+{% elsif include.project.featured_image %}
+<img src="{{ include.project.featured_image | relative_url }}" alt="{{ include.project.title }}"
+    class="{{ include.class }}">
+{% endif %}

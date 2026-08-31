@@ -418,3 +418,14 @@ const Analytics = (() => {
 
 document.addEventListener('DOMContentLoaded', () => Analytics.init());
 window.Analytics = Analytics;
+
+/* Autoplaying card clips: hold on the poster frame for visitors who have asked
+   for reduced motion. CSS cannot pause a <video>, so this has to be script. */
+document.addEventListener('DOMContentLoaded', () => {
+    if (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.querySelectorAll('video[autoplay]').forEach(v => {
+        v.removeAttribute('autoplay');
+        v.pause();
+        v.currentTime = 0;
+    });
+});

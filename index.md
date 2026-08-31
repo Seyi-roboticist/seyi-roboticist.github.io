@@ -300,8 +300,8 @@ title: Home
       {% for project in completed limit: 6 %}
         <div class="project-card-featured">
           <div class="project-media">
-            {% if project.featured_image %}
-              <img src="{{ project.featured_image | relative_url }}" alt="{{ project.title }}">
+            {% if project.featured_video or project.featured_image %}
+              {% include project-media.html project=project class="project-image" %}
             {% else %}
               <div class="project-placeholder">
                 <i class="fas fa-robot"></i>
