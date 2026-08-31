@@ -6,6 +6,8 @@ status: completed
 date: 2025-05-01
 categories: [UAV, ROS2, Autonomy, MAVROS, Computer Vision, ArduPilot]
 featured_image: "/assets/images/projects/aurelia/test_arms-poster.webp"
+featured_video: "/assets/images/projects/aurelia/test_arms.mp4"
+featured_video_webm: "/assets/images/projects/aurelia/test_arms.webm"
 github_url: "https://github.com/Seyi-roboticist/drone_original"
 redirect_from:
   - /projects/auerlia-x4-uav/

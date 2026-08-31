@@ -45,10 +45,8 @@ permalink: /projects/
                          data-status="completed">
                     
                     <div class="project-preview">
-                        {% if project.featured_image %}
-                            <img src="{{ project.featured_image | relative_url }}" 
-                                 alt="{{ project.title }}" 
-                                 class="project-image">
+                        {% if project.featured_video or project.featured_image %}
+                            {% include project-media.html project=project class="project-image" %}
                         {% elsif project.models.first %}
                             <div class="model-preview">
                                 <model-viewer 
@@ -160,10 +158,8 @@ permalink: /projects/
                          data-status="ongoing">
                     
                     <div class="project-preview">
-                        {% if project.featured_image %}
-                            <img src="{{ project.featured_image | relative_url }}" 
-                                 alt="{{ project.title }}" 
-                                 class="project-image">
+                        {% if project.featured_video or project.featured_image %}
+                            {% include project-media.html project=project class="project-image" %}
                         {% elsif project.models.first %}
                             <div class="model-preview">
                                 <model-viewer 
@@ -269,10 +265,8 @@ permalink: /projects/
                          data-categories="{% for cat in project.categories %}{{ cat | slugify }} {% endfor %}">
                     
                     <div class="project-preview">
-                        {% if project.featured_image %}
-                            <img src="{{ project.featured_image | relative_url }}" 
-                                 alt="{{ project.title }}" 
-                                 class="project-image">
+                        {% if project.featured_video or project.featured_image %}
+                            {% include project-media.html project=project class="project-image" %}
                         {% elsif project.models.first %}
                             <div class="model-preview">
                                 <model-viewer 

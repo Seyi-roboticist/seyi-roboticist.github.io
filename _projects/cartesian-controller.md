@@ -6,6 +6,8 @@ status: completed
 date: 2025-10-01
 categories: [Manipulation, Controls, Xacro, ROS2, C++, Python]
 featured_image: "/assets/images/projects/cartesian-controller/ur5_control-poster.webp"
+featured_video: "/assets/images/projects/cartesian-controller/ur5_control.mp4"
+featured_video_webm: "/assets/images/projects/cartesian-controller/ur5_control.webm"
 github_url: "https://github.com/Seyi-roboticist/_controller_"
 demo_url: "https://www.youtube.com/watch?v=lPNE6-0R59k"
 
@@ -132,6 +134,18 @@ I built a complete real-time Cartesian position controller for Universal Robots 
 The controller runs at 500Hz and achieves ±0.7mm positional accuracy across the full UR5e workspace. I validated it in Gazebo simulation first, then deployed it on real UR5 and UR5e hardware.
 
 ## Demos
+
+<figure class="project-video">
+  <video autoplay loop muted playsinline preload="metadata"
+    poster="/assets/images/projects/cartesian-controller/ur5_control-poster.webp">
+    <source src="/assets/images/projects/cartesian-controller/ur5_control.webm" type="video/webm">
+    <source src="/assets/images/projects/cartesian-controller/ur5_control.mp4" type="video/mp4">
+    <img src="/assets/images/projects/cartesian-controller/ur5_control-poster.webp"
+      alt="UR5e tracking a Cartesian target under the 500Hz controller">
+  </video>
+</figure>
+
+*UR5e under the 500Hz Cartesian controller, tracking a commanded end-effector pose.*
 
 [![Simulation Demo](https://img.youtube.com/vi/lPNE6-0R59k/maxresdefault.jpg)](https://www.youtube.com/watch?v=lPNE6-0R59k)
 
