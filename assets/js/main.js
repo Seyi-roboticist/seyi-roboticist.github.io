@@ -323,7 +323,11 @@ const Analytics = (() => {
 
     const send = (name, params = {}) => {
         if (typeof window.gtag !== 'function') return;
-        window.gtag('event', name, params);
+        // visit_source is set in _includes/analytics.html from ?src= / ?utm_source=
+        window.gtag('event', name, {
+            visit_source: window.visitSource || 'direct',
+            ...params
+        });
     };
 
     // Resume downloads, mail clicks, and any other element carrying data-track
