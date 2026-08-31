@@ -887,3 +887,10 @@
 .slide-up.animate {
   animation-play-state: running;
 }
+/* Card media rendered as looping video (see _includes/project-media.html).
+   Matches the <img> box exactly so cards do not reflow between the two. */
+video.project-image {
+  display: block;
+  object-fit: cover;
+  background-color: var(--surface-color);
+}
