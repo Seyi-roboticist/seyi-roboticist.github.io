@@ -5,10 +5,33 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
+
+  // Campaign tagging: append ?src=<label> to a link you send out
+  // (e.g. /?src=tesla-controls) and every event from that visit carries the
+  // label, so a resume download can be traced back to the application it
+  // came from. Held in sessionStorage so it survives navigation within the
+  // visit, and falls back to utm_source when that is what was used.
+  window.visitSource = (function () {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var src = params.get('src') || params.get('utm_source');
+      if (src) {
+        src = src.slice(0, 60);
+        sessionStorage.setItem('visit_source', src);
+        return src;
+      }
+      return sessionStorage.getItem('visit_source') || 'direct';
+    } catch (e) {
+      return 'direct';   // private browsing can throw on sessionStorage
+    }
+  })();
+
+  gtag('set', 'user_properties', { visit_source: window.visitSource });
   gtag('config', '{{ site.analytics.ga4_id }}', {
     // Group hits by section so the Projects funnel is readable in reports
     content_group: '{% if page.layout == "project" %}project{% elsif page.url == "/" %}home{% else %}{{ page.url | remove: "/" | default: "page" }}{% endif %}',
-    page_title: '{{ page.title | default: site.title | escape }}'
+    page_title: '{{ page.title | default: site.title | escape }}',
+    visit_source: window.visitSource
   });
 </script>
 {% endif %}
