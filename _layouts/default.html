@@ -13,7 +13,7 @@
         })();
     </script>
 
-    <!-- SEO: jekyll-seo-tag emits <title>, description, canonical, OpenGraph and Twitter cards -->
+    <!-- SEO: jekyll-seo-tag emits the title, description, canonical, OpenGraph and Twitter tags -->
     {% seo %}
 
     <!-- Analytics -->
@@ -36,8 +36,9 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/images/favicon-32x32.png' | relative_url }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/images/favicon-16x16.png' | relative_url }}">
 
-    <!-- MathJax: opt in per page with `mathjax: true` in front matter -->
-    {% if page.mathjax %}
+    <!-- MathJax: on for every project page (they all carry LaTeX), plus any
+         other page that opts in with `mathjax: true` in its front matter. -->
+    {% if page.layout == 'project' or page.mathjax %}
     <script>
         window.MathJax = {
             tex: {
